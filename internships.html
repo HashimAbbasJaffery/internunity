@@ -33,8 +33,8 @@
             </div>
             <nav>
                 <ul class="flex items-center space-x-2">
-                    <li class="bg-shade px-3 rounded py-1 text-black"><a href="/index.html">Apply</a></li>
-                    <li class="hover:bg-shade hover:text-black px-3 py-1 rounded"><a href="/internships.html">Internships</a></li>
+                    <li class="hover:bg-shade hover:text-black px-3 py-1 rounded"><a href="index.html">Apply</a></li>
+                    <li class="bg-shade px-3 rounded py-1 text-black"><a href="internships.html">Internships</a></li>
                     <li class="hover:bg-shade hover:text-black px-3 py-1 rounded"><a href="#">Profile</a></li>
                     <li class="hover:bg-shade hover:text-black px-3 py-1 rounded"><a href="#">Companies</a></li>
                 </ul>
@@ -42,9 +42,12 @@
         </div>
     </header>
     <main>
-        <section id="search" class="container mx-auto w-2/3 flex justify-between">
-            <input type="text" class="border border-black w-full outline-none rounded-full px-3 py-2 mt-3" placeholder="Search">
-        </section>
+        <div class="tags my-3 container mx-auto w-2/3">
+            <span class="tag bg-base-alt text-black text-xs rounded-full cursor-pointer p-2">Applied (10)</span>
+            <span class="tag bg-black text-white text-xs rounded-full cursor-pointer p-2">Interviewing (1)</span>
+            <span class="tag bg-black text-white text-xs rounded-full cursor-pointer p-2">Rejected (9)</span>
+            <span class="tag bg-black text-white text-xs rounded-full cursor-pointer p-2">Selected (0)</span>
+        </div>
         <section id="internships" class="container mx-auto mt-9 w-2/3 divide-y-2">
             <div class="internship bg-white mt-3 rounded-md p-2 hover:bg-grey cursor-pointer">
                 <p class="text-xs">Posted 5 Years ago</p>
