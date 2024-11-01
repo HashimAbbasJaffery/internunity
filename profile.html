@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Internunity | Internships</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+    />
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Angkor&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <script src="https://kit.fontawesome.com/3a7e8b6e65.js" crossorigin="anonymous"></script>
+     <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'base': '#053440',
+                        'shade': 'white',
+                        'base-alt': '#F1B434',
+                        'base-alt-shade': '#e8cf82',
+                        'grey': '#e9f0ea'
+                    }
+                }
+            }
+        }
+     </script>
+</head>
+<body class="relative h-screen">
+    <section id="project-modal" class="hidden absolute bg-black/75 w-full h-full flex justify-center items-center z-10">
+        <div class="project bg-white w-1/2 p-3 rounded-md relative">
+            <div class="close bg-red-500 absolute p-1 right-5 top-5 px-2 rounded-md text-white">
+                <i class="fa-solid fa-xmark"></i>
+            </div>
+            <img src="https://placehold.co/600x300" class="w-full rounded-md" alt="">
+            <h1 class="text-3xl font-bold mt-3 opacity-75">Leartunity - The Laravel Project</h1>
+            <p class="mt-3 text-sm">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quia tempora magnam recusandae iusto esse deserunt accusamus, quaerat enim hic veniam quidem expedita. Porro, aut? Fugit ducimus vel vitae suscipit natus quo maxime reiciendis odit quidem nesciunt nihil nam sint cum distinctio animi quas repellat adipisci, obcaecati ipsum ut corporis vero.</p>
+            <div class="icons mt-3 space-x-1 text-sm">
+                <i class="fa-brands fa-github"></i>
+                <i class="fa-brands fa-youtube"></i>
+            </div>
+        </div>
+    </section>
+
+    <section id="experience-modal" class="hidden absolute bg-black/75 w-full h-full flex justify-center items-center z-10">
+        <div class="experience bg-white w-1/2 p-3 rounded-md relative">
+            <label for="name">
+                <p class="text-sm mb-1">Company Name</p>
+                <input type="text" id="name" class="mb-3 shade outline-none p-1 text-sm w-full rounded-md">
+            </label>
+            <div class="duration flex gap-2">
+                <label for="name" class="w-1/2">
+                    <p class="text-sm mb-1">From</p>
+                    <input type="date" id="name" class="mb-3 shade outline-none p-1 text-sm w-full rounded-md">
+                </label>
+                <label for="name" class="w-1/2">
+                    <p class="text-sm mb-1">To</p>
+                    <input type="date" id="name" class="mb-3 shade outline-none p-1 text-sm w-full rounded-md">
+                </label>
+            </div>
+            <label for="name" class="w-1/2">
+                <p class="text-sm mb-1">To</p>
+                <textarea type="date" id="name" rows="4" class="resize-none mb-3 shade outline-none p-1 text-sm w-full rounded-md"></textarea>
+            </label>
+            
+            <button class="bg-base-alt text-white px-3 py-1 rounded-md mr-1">Add</button>
+            <button class="bg-red-500 text-white px-3 py-1 rounded-md">Cancel</button>
+        </div>
+    </section>
+
+    <header class="bg-base text-white py-4">
+        <div class="container mx-auto w-2/3 flex justify-between items-center">
+            <div class="logo">
+                <h1 class="text-3xl font-bold">Internunity</h1>
+            </div>
+            <nav>
+                <ul class="flex items-center space-x-2">
+                    <li class="hover:bg-shade hover:text-black px-3 py-1 rounded"><a href="index.html">Apply</a></li>
+                    <li class="bg-shade px-3 rounded py-1 text-black"><a href="internships.html">Internships</a></li>
+                    <li class="hover:bg-shade hover:text-black px-3 py-1 rounded"><a href="#">Profile</a></li>
+                    <li class="hover:bg-shade hover:text-black px-3 py-1 rounded"><a href="#">Companies</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <main>
+        <section class="profile container mx-auto w-2/3 flex mt-4 gap-2 items-start">
+            <nav class="options bg-base-alt text-white w-1/3 p-2 rounded-md">
+                <ul class="space-y-3">
+                    <li class="cursor-pointer hover:bg-black/50 px-3 py-1 bg-black rounded-md">Personal Information</li>
+                    <li class="cursor-pointer hover:bg-black/50 px-3 py-1 rounded-md">Portfolio</li>
+                    <li class="cursor-pointer hover:bg-black/50 px-3 py-1 rounded-md">Experiences</li>
+                    <li class="cursor-pointer hover:bg-black/50 px-3 py-1 rounded-md">Education</li>
+                </ul>
+            </nav>
+            <section id="personal-info" class="hidden shade w-2/3 rounded-md p-3">
+                <form>
+                    <label for="name">
+                        <p class="text-sm mb-1">Name</p>
+                        <input type="text" id="name" class="mb-3 shade outline-none p-1 text-sm w-full rounded-md">
+                    </label>
+                    <label for="email">
+                        <p class="text-sm mb-1">Email</p>
+                        <input type="email" id="email" class="shade outline-none p-1 text-sm w-full rounded-md">
+                    </label>
+                    <button type="submit" class="bg-base-alt text-white px-3 py-1 rounded-md mt-3">Update</button>
+                </form>
+            </section>
+            <section id="portfolio" class="hidden shade w-2/3 p-3 rounded-md">
+                <h1 class="font-bold mb-2 text-xl">Projects</h1>
+                <div class="projects flex flex-wrap justify-start gap">
+                    <div class="cursor-pointer project hover:border-base-alt rounded-md p-1 mb-1">
+                        <img src="https://placehold.co/95x95" class="rounded-md" alt="">
+                    </div>
+                    <div class="cursor-pointer project hover:border-base-alt rounded-md p-1 mb-1">
+                        <img src="https://placehold.co/95x95" class="rounded-md" alt="">
+                    </div>
+                    <div class="cursor-pointer project hover:border-base-alt rounded-md p-1 mb-1">
+                        <img src="https://placehold.co/95x95" class="rounded-md" alt="">
+                    </div>
+                    <div class="cursor-pointer project hover:border-base-alt rounded-md p-1 mb-1">
+                        <img src="https://placehold.co/95x95" class="rounded-md" alt="">
+                    </div>
+                    <div class="cursor-pointer project hover:border-base-alt rounded-md p-1 mb-1">
+                        <img src="https://placehold.co/95x95" class="rounded-md" alt="">
+                    </div>
+                    <div class="cursor-pointer project hover:border-base-alt rounded-md p-1 mb-1">
+                        <img src="https://placehold.co/95x95" class="rounded-md" alt="">
+                    </div>
+                    <div class="cursor-pointer project hover:border-base-alt rounded-md p-1 mb-1">
+                        <img src="https://placehold.co/95x95" class="rounded-md" alt="">
+                    </div>
+                    <div class="cursor-pointer project hover:border-base-alt rounded-md p-1 mb-1">
+                        <img src="https://placehold.co/95x95" class="rounded-md" alt="">
+                    </div>
+                    <div class="cursor-pointer project hover:border-base-alt rounded-md p-1 mb-1">
+                        <img src="https://placehold.co/95x95" class="rounded-md" alt="">
+                    </div>
+                    <div class="cursor-pointer project hover:border-base-alt rounded-md p-1 mb-1">
+                        <img src="https://placehold.co/95x95" class="rounded-md" alt="">
+                    </div>
+                    <div class="cursor-pointer project hover:border-base-alt rounded-md p-1 mb-1">
+                        <img src="https://placehold.co/95x95" class="rounded-md" alt="">
+                    </div>
+                    <div class="cursor-pointer project hover:border-base-alt rounded-md p-1 mb-1">
+                        <img src="https://placehold.co/95x95" class="rounded-md" alt="">
+                    </div>
+                    <div class="cursor-pointer project hover:border-base-alt rounded-md p-1 mb-1">
+                        <img src="https://placehold.co/95x95" class="rounded-md" alt="">
+                    </div>
+                    <div class="cursor-pointer project hover:border-base-alt rounded-md p-1 mb-1">
+                        <img src="https://placehold.co/95x95" class="rounded-md" alt="">
+                    </div>
+                    <div class="cursor-pointer project hover:border-base-alt rounded-md p-1 mb-1 border-dotted border-2 border-base-alt">
+                        <div class="add flex justify-center items-center h-full" style="width: 90px;">
+                            <i class="fa-solid fa-plus"></i>
+                        </div>
+                    </div>
+                    
+                </div>
+                <div class="load-more w-full flex justify-center items-center">
+                    <button class="bg-base-alt text-white px-3 py-1 rounded-md mt-3">Load More</button>
+                </div>
+            </section>
+            <section id="Experiences" class="hidden w-2/3 p-3 rounded-md space-y-3 divide-y-2">
+                <div class="experience">
+                    <h1 class="font-bold">Mimsoft Private Limited</h1>
+                    <p class="text-xs opacity-50 italic">May 2019 - Present</p>
+                    <p class="text-sm">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nemo placeat cumque aspernatur voluptatem est autem quis vero adipisci, at earum aperiam dignissimos architecto pariatur rem hic. Asperiores temporibus optio voluptas, sunt debitis assumenda itaque doloremque, mollitia corporis placeat ipsa. Sunt!</p>
+                </div>
+                <div class="experience pt-3">
+                    <h1 class="font-bold">Mimsoft Private Limited</h1>
+                    <p class="text-xs opacity-50 italic">May 2019 - Present</p>
+                    <p class="text-sm">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nemo placeat cumque aspernatur voluptatem est autem quis vero adipisci, at earum aperiam dignissimos architecto pariatur rem hic. Asperiores temporibus optio voluptas, sunt debitis assumenda itaque doloremque, mollitia corporis placeat ipsa. Sunt!</p>
+                </div>
+                <div class="experience pt-3">
+                    <h1 class="font-bold">Mimsoft Private Limited</h1>
+                    <p class="text-xs opacity-50 italic">May 2019 - Present</p>
+                    <p class="text-sm">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nemo placeat cumque aspernatur voluptatem est autem quis vero adipisci, at earum aperiam dignissimos architecto pariatur rem hic. Asperiores temporibus optio voluptas, sunt debitis assumenda itaque doloremque, mollitia corporis placeat ipsa. Sunt!</p>
+                </div>
+                
+                <div class="load-more w-full flex justify-center items-center">
+                    <button class="bg-base-alt text-white px-3 py-1 rounded-md mt-3">Load More</button>
+                </div>
+            </section>
+            <section id="Experiences" class="shade w-2/3 p-3 rounded-md space-y-3 divide-y-2">
+                <div class="experience">
+                    <h1 class="font-bold">Sindh Medressatul Islam University</h1>
+                    <p class="text-xs opacity-50 italic">September 2021 - July 2025 (Expected)</p>
+                    <p class="text-sm">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nemo placeat cumque aspernatur voluptatem est autem quis vero adipisci, at earum aperiam dignissimos architecto pariatur rem hic. Asperiores temporibus optio voluptas, sunt debitis assumenda itaque doloremque, mollitia corporis placeat ipsa. Sunt!</p>
+                </div>
+                <div class="experience pt-3">
+                    <h1 class="font-bold">Fatimiyah Boys College</h1>
+                    <p class="text-xs opacity-50 italic">May 2019 - September 2021</p>
+                    <p class="text-sm">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nemo placeat cumque aspernatur voluptatem est autem quis vero adipisci, at earum aperiam dignissimos architecto pariatur rem hic. Asperiores temporibus optio voluptas, sunt debitis assumenda itaque doloremque, mollitia corporis placeat ipsa. Sunt!</p>
+                </div>
+                <div class="experience pt-3">
+                    <h1 class="font-bold">Golden Career Primary and Secondary School</h1>
+                    <p class="text-xs opacity-50 italic">May 2008 - May 2019</p>
+                    <p class="text-sm">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nemo placeat cumque aspernatur voluptatem est autem quis vero adipisci, at earum aperiam dignissimos architecto pariatur rem hic. Asperiores temporibus optio voluptas, sunt debitis assumenda itaque doloremque, mollitia corporis placeat ipsa. Sunt!</p>
+                </div>
+                
+                <div class="load-more w-full flex justify-center items-center">
+                    <button class="bg-base-alt text-white px-3 py-1 rounded-md mt-3">Load More</button>
+                </div>
+            </section>
+        </section>
+    </main>
+</body>
+</html>
