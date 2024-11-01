@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Internunity | Internships</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+    />
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Angkor&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <script src="https://kit.fontawesome.com/3a7e8b6e65.js" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
+     <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'base': '#053440',
+                        'shade': 'white',
+                        'base-alt': '#F1B434',
+                        'base-alt-shade': '#e8cf82',
+                        'grey': '#e9f0ea'
+                    }
+                }
+            }
+        }
+     </script>
+</head>
+<body class="relative h-screen">
+    <section id="report-modal" class="hidden absolute bg-black/75 w-full h-full flex justify-center items-center z-10">
+        <div class="report bg-white w-1/2 p-3 rounded-md relative">
+            <h1 class="mb-2 font-bold">Report Company</h1>
+            <label for="">
+                <p class="text-sm mt-3 mb-1">Report Reason</p>
+                <select class="shade rounded-md w-full outline-none px-2">
+                    <option value="0">Inappropriate content</option>
+                    <option value="0">Misguidanc</option>
+                    <option value="0">Not alerting employees on rejections</option>
+                </select>
+            </label>
+            <label for="">
+                <p class="text-sm mt-3 mb-1">Additional Information (Optional)</p>
+                <textarea rows="4" class="resize-none shade w-full rounded-md outline-none"></textarea>
+            </label>
+            <button class="bg-red-500 text-white px-3 py-1 rounded-md">Report</button>
+            <button class="bg-black text-white px-3 py-1 rounded-md">Cancel</button>
+        </div>
+    </section>
+    <header class="bg-base text-white py-4">
+        <div class="container mx-auto w-2/3 flex justify-between items-center">
+            <div class="logo">
+                <h1 class="text-3xl font-bold">Internunity</h1>
+            </div>
+            <nav>
+                <ul class="flex items-center space-x-2">
+                    <li class="hover:bg-shade hover:text-black px-3 py-1 rounded"><a href="index.html">Apply</a></li>
+                    <li class="bg-shade px-3 rounded py-1 text-black"><a href="internships.html">Internships</a></li>
+                    <li class="hover:bg-shade hover:text-black px-3 py-1 rounded"><a href="profile.html">Profile</a></li>
+                    <li class="hover:bg-shade hover:text-black px-3 py-1 rounded"><a href="#">Companies</a></li>
+                    <li class="hover:bg-shade hover:text-black px-3 py-1 rounded"><a href="#">Messages</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <main>
+        <section id="search" class="container mx-auto w-2/3 flex justify-between">
+            <input type="text" class="border border-black w-full outline-none rounded-full px-3 py-2 mt-3" placeholder="Search">
+        </section>
+        <section id="companies" class="container mx-auto w-2/3 mt-3 rounded-md companies space-y-3">
+            <div class="company shade p-2 relative">
+                <div class="actions absolute right-5 flex gap-2 text-xs">
+                    <button class="flex justify-between items-center gap-2 notify bg-blue-500 px-2 py-1 text-white rounded-md">
+                        <i class="fa-solid fa-bell"></i>
+                        <p>Notify new internships</p>
+                    </button>
+                    <button class="notify bg-base-alt text-black px-2 py-1 rounded-md">
+                        See More
+                    </button>
+                    <button class="notify bg-red-500 text-white px-2 py-1 rounded-md">
+                        <i class="fa-solid fa-flag"></i>
+                    </button>
+                </div>
+                <div class="company-header flex gap-2">
+                    <img src="https://placehold.co/50x50" class="rounded-md" alt="">
+                    <div class="company-detail">
+                        <h1>Finxe Connect private ltd.</h1>
+                        <p class="text-xs italic opacity-75">10-11 Sized company</p>
+                    </div>
+                </div>
+                <p class="text-sm mt-2">Lorem ipsum dolor sit amet consectetur adipisicing elit. Omnis ipsa rem consequatur velit possimus, maxime quod recusandae ad, molestias eius vitae, dolor nobis earum iure? Architecto quos velit perferendis, est praesentium ipsa consectetur laudantium ipsam vitae minus nihil harum culpa?</p>
+            </div>
+            <div class="company shade p-2 relative">
+                <div class="actions absolute right-5 flex gap-2 text-xs">
+                    <button class="flex justify-between items-center gap-2 notify bg-blue-500 px-2 py-1 text-white rounded-md">
+                        <i class="fa-solid fa-bell"></i>
+                        <p>Notify new internships</p>
+                    </button>
+                    <button class="notify bg-base-alt text-black px-2 py-1 rounded-md">
+                        See More
+                    </button>
+                    <button class="notify bg-red-500 text-white px-2 py-1 rounded-md">
+                        <i class="fa-solid fa-flag"></i>
+                    </button>
+                </div>
+                <div class="company-header flex gap-2">
+                    <img src="https://placehold.co/50x50" class="rounded-md" alt="">
+                    <div class="company-detail">
+                        <h1>Finxe Connect private ltd.</h1>
+                        <p class="text-xs italic opacity-75">10-11 Sized company</p>
+                    </div>
+                </div>
+                <p class="text-sm mt-2">Lorem ipsum dolor sit amet consectetur adipisicing elit. Omnis ipsa rem consequatur velit possimus, maxime quod recusandae ad, molestias eius vitae, dolor nobis earum iure? Architecto quos velit perferendis, est praesentium ipsa consectetur laudantium ipsam vitae minus nihil harum culpa?</p>
+            </div>
+            <div class="company shade p-2 relative">
+                <div class="actions absolute right-5 flex gap-2 text-xs">
+                    <button class="flex justify-between items-center gap-2 notify bg-blue-500 px-2 py-1 text-white rounded-md">
+                        <i class="fa-solid fa-bell"></i>
+                        <p>Notify new internships</p>
+                    </button>
+                    <button class="notify bg-base-alt text-black px-2 py-1 rounded-md">
+                        See More
+                    </button>
+                    <button class="notify bg-red-500 text-white px-2 py-1 rounded-md">
+                        <i class="fa-solid fa-flag"></i>
+                    </button>
+                </div>
+                <div class="company-header flex gap-2">
+                    <img src="https://placehold.co/50x50" class="rounded-md" alt="">
+                    <div class="company-detail">
+                        <h1>Finxe Connect private ltd.</h1>
+                        <p class="text-xs italic opacity-75">10-11 Sized company</p>
+                    </div>
+                </div>
+                <p class="text-sm mt-2">Lorem ipsum dolor sit amet consectetur adipisicing elit. Omnis ipsa rem consequatur velit possimus, maxime quod recusandae ad, molestias eius vitae, dolor nobis earum iure? Architecto quos velit perferendis, est praesentium ipsa consectetur laudantium ipsam vitae minus nihil harum culpa?</p>
+            </div>
+            <div class="company shade p-2 relative">
+                <div class="actions absolute right-5 flex gap-2 text-xs">
+                    <button class="flex justify-between items-center gap-2 notify bg-blue-500 px-2 py-1 text-white rounded-md">
+                        <i class="fa-solid fa-bell"></i>
+                        <p>Notify new internships</p>
+                    </button>
+                    <button class="notify bg-base-alt text-black px-2 py-1 rounded-md">
+                        See More
+                    </button>
+                    <button class="notify bg-red-500 text-white px-2 py-1 rounded-md">
+                        <i class="fa-solid fa-flag"></i>
+                    </button>
+                </div>
+                <div class="company-header flex gap-2">
+                    <img src="https://placehold.co/50x50" class="rounded-md" alt="">
+                    <div class="company-detail">
+                        <h1>Finxe Connect private ltd.</h1>
+                        <p class="text-xs italic opacity-75">10-11 Sized company</p>
+                    </div>
+                </div>
+                <p class="text-sm mt-2">Lorem ipsum dolor sit amet consectetur adipisicing elit. Omnis ipsa rem consequatur velit possimus, maxime quod recusandae ad, molestias eius vitae, dolor nobis earum iure? Architecto quos velit perferendis, est praesentium ipsa consectetur laudantium ipsam vitae minus nihil harum culpa?</p>
+            </div>
+            <div class="company shade p-2 relative">
+                <div class="actions absolute right-5 flex gap-2 text-xs">
+                    <button class="flex justify-between items-center gap-2 notify bg-blue-500 px-2 py-1 text-white rounded-md">
+                        <i class="fa-solid fa-bell"></i>
+                        <p>Notify new internships</p>
+                    </button>
+                    <button class="notify bg-base-alt text-black px-2 py-1 rounded-md">
+                        See More
+                    </button>
+                    <button class="notify bg-red-500 text-white px-2 py-1 rounded-md">
+                        <i class="fa-solid fa-flag"></i>
+                    </button>
+                </div>
+                <div class="company-header flex gap-2">
+                    <img src="https://placehold.co/50x50" class="rounded-md" alt="">
+                    <div class="company-detail">
+                        <h1>Finxe Connect private ltd.</h1>
+                        <p class="text-xs italic opacity-75">10-11 Sized company</p>
+                    </div>
+                </div>
+                <p class="text-sm mt-2">Lorem ipsum dolor sit amet consectetur adipisicing elit. Omnis ipsa rem consequatur velit possimus, maxime quod recusandae ad, molestias eius vitae, dolor nobis earum iure? Architecto quos velit perferendis, est praesentium ipsa consectetur laudantium ipsam vitae minus nihil harum culpa?</p>
+            </div>
+            <div class="company shade p-2 relative">
+                <div class="actions absolute right-5 flex gap-2 text-xs">
+                    <button class="flex justify-between items-center gap-2 notify bg-blue-500 px-2 py-1 text-white rounded-md">
+                        <i class="fa-solid fa-bell"></i>
+                        <p>Notify new internships</p>
+                    </button>
+                    <button class="notify bg-base-alt text-black px-2 py-1 rounded-md">
+                        See More
+                    </button>
+                    <button class="notify bg-red-500 text-white px-2 py-1 rounded-md">
+                        <i class="fa-solid fa-flag"></i>
+                    </button>
+                </div>
+                <div class="company-header flex gap-2">
+                    <img src="https://placehold.co/50x50" class="rounded-md" alt="">
+                    <div class="company-detail">
+                        <h1>Finxe Connect private ltd.</h1>
+                        <p class="text-xs italic opacity-75">10-11 Sized company</p>
+                    </div>
+                </div>
+                <p class="text-sm mt-2">Lorem ipsum dolor sit amet consectetur adipisicing elit. Omnis ipsa rem consequatur velit possimus, maxime quod recusandae ad, molestias eius vitae, dolor nobis earum iure? Architecto quos velit perferendis, est praesentium ipsa consectetur laudantium ipsam vitae minus nihil harum culpa?</p>
+            </div>
+            <div class="company shade p-2 relative">
+                <div class="actions absolute right-5 flex gap-2 text-xs">
+                    <button class="flex justify-between items-center gap-2 notify bg-blue-500 px-2 py-1 text-white rounded-md">
+                        <i class="fa-solid fa-bell"></i>
+                        <p>Notify new internships</p>
+                    </button>
+                    <button class="notify bg-base-alt text-black px-2 py-1 rounded-md">
+                        See More
+                    </button>
+                    <button class="notify bg-red-500 text-white px-2 py-1 rounded-md">
+                        <i class="fa-solid fa-flag"></i>
+                    </button>
+                </div>
+                <div class="company-header flex gap-2">
+                    <img src="https://placehold.co/50x50" class="rounded-md" alt="">
+                    <div class="company-detail">
+                        <h1>Finxe Connect private ltd.</h1>
+                        <p class="text-xs italic opacity-75">10-11 Sized company</p>
+                    </div>
+                </div>
+                <p class="text-sm mt-2">Lorem ipsum dolor sit amet consectetur adipisicing elit. Omnis ipsa rem consequatur velit possimus, maxime quod recusandae ad, molestias eius vitae, dolor nobis earum iure? Architecto quos velit perferendis, est praesentium ipsa consectetur laudantium ipsam vitae minus nihil harum culpa?</p>
+            </div>
+        </section>
+        <div class="load-button text-center m-3">
+            <button class="bg-black text-white px-5 py-2 mb-3 rounded-full">Load more</button>
+        </div>
+    </main>
+</body>
+</html>
