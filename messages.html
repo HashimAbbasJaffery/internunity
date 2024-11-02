@@ -50,8 +50,12 @@
     </header>
     <main>
         <section class="messages flex container mx-auto w-2/3 flex mt-4 gap-2 items-start">
+            
             <div class="users options shade text-white w-1/3 p-2 rounded-md space-y-4" style="height: 400px; overflow-y:auto;">
-                <div class="user flex gap-2">
+                <div class="search">
+                    <input type="text" id="name" class="shade outline-none p-1 px-2 text-black text-sm w-full rounded-md" placeholder="Search">
+                </div>
+                <div class="user flex gap-2 hover:bg-grey p-1 rounded-md cursor-pointer">
                     <div class="user-pic relative">
                         <div class="online bg-green-500 rounded-full absolute border-2 border-white bottom-0" style="right: -3px; width: 12px; height: 12px;">&nbsp;</div>
                         <img src="https://placehold.co/45x45" class="rounded-md" alt="">
@@ -61,7 +65,7 @@
                         <div class="text-xs italic last-message">You are hired!</div>
                     </div>
                 </div>
-                <div class="user flex gap-2">
+                <div class="user flex gap-2 hover:bg-grey p-1 rounded-md cursor-pointer">
                     <div class="user-pic relative">
                         <div class="online bg-green-500 rounded-full absolute border-2 border-white bottom-0" style="right: -3px; width: 12px; height: 12px;">&nbsp;</div>
                         <img src="https://placehold.co/45x45" class="rounded-md" alt="">
@@ -71,7 +75,7 @@
                         <div class="text-xs italic last-message">You are hired!</div>
                     </div>
                 </div>
-                <div class="user flex gap-2">
+                <div class="user flex gap-2 hover:bg-grey p-1 rounded-md cursor-pointer">
                     <div class="user-pic relative">
                         <div class="online bg-green-500 rounded-full absolute border-2 border-white bottom-0" style="right: -3px; width: 12px; height: 12px;">&nbsp;</div>
                         <img src="https://placehold.co/45x45" class="rounded-md" alt="">
@@ -81,7 +85,7 @@
                         <div class="text-xs italic last-message">You are hired!</div>
                     </div>
                 </div>
-                <div class="user flex gap-2">
+                <div class="user flex gap-2 hover:bg-grey p-1 rounded-md cursor-pointer">
                     <div class="user-pic relative">
                         <div class="online bg-green-500 rounded-full absolute border-2 border-white bottom-0" style="right: -3px; width: 12px; height: 12px;">&nbsp;</div>
                         <img src="https://placehold.co/45x45" class="rounded-md" alt="">
@@ -92,7 +96,7 @@
                     </div>
                 </div>
             </div>
-            <div class="chats flex flex-col h-full shade w-2/3 rounded-md" style="height: 400px;">
+            <div id="chats" class="chats flex flex-col h-full shade w-2/3 rounded-md" style="height: 400px;">
                 <div class="chat-header p-2 flex gap-2 border-b-2 " style="height: 16%;">
                     <div class="chat-pic">
                         <img src="https://placehold.co/45x45" class="rounded-md" alt="">
@@ -102,7 +106,7 @@
                         <p class="text-xs italic opacity-75">Online</p>
                     </div>
                 </div>
-                <div class="chat-body" style="height: 80%; overflow-y: auto;">
+                <div id="chat-body" class="chat-body" style="height: 80%; overflow-y: auto;">
                     <div class="sender w-full p-2 flex gap-1 items-start">
                         <div class="sender-image">
                             <img src="https://placehold.co/30x30" class="rounded-md" alt="">
@@ -163,4 +167,8 @@
         </section>
     </main>
 </body>
+<script>
+    var objDiv = document.getElementById("chat-body");
+    objDiv.scrollTop = objDiv.scrollHeight;
+</script>
 </html>

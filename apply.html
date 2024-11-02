@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Internunity | Home</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Angkor&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <script src="https://kit.fontawesome.com/3a7e8b6e65.js" crossorigin="anonymous"></script>
+    
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'base': '#053440',
+                        'shade': 'white',
+                        'base-alt': '#F1B434',
+                        'grey': '#e9f0ea'
+                    }
+                }
+            }
+        }
+     </script>
+</head>
+<body>
+    <header class="bg-base text-white py-4">
+        <div class="container mx-auto w-2/3 flex justify-between items-center">
+            <div class="logo">
+                <h1 class="text-3xl font-bold">Internunity</h1>
+            </div>
+            <nav>
+                <ul class="flex items-center space-x-2">
+                    <li class="bg-shade px-3 rounded py-1 text-black"><a href="/index.html">Apply</a></li>
+                    <li class="hover:bg-shade hover:text-black px-3 py-1 rounded"><a href="/internships.html">Internships</a></li>
+                    <li class="hover:bg-shade hover:text-black px-3 py-1 rounded"><a href="/profile.html">Profile</a></li>
+                    <li class="hover:bg-shade hover:text-black px-3 py-1 rounded"><a href="#">Companies</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <main>
+        <section id="apply" class="container mx-auto w-2/3 mt-3">
+            <label for="name">
+                <p class="text-sm mb-1">First Name<span class="text-red-500">*</span></p>
+                <input type="text" id="name" class="mb-3 shade outline-none p-1 text-sm w-full rounded-md">
+            </label>
+            <label for="last_name">
+                <p class="text-sm mb-1">Last Name<span class="text-red-500">*</span></p>
+                <input type="text" id="last_name" class="mb-3 shade outline-none p-1 text-sm w-full rounded-md">
+            </label>
+            <label for="cover_letter">
+                <p class="text-sm mb-1">Cover Letter<span class="text-red-500">*</span></p>
+                <textarea type="text" rows="4" id="cover_letter" class="mb-3 resize-none shade outline-none p-1 text-sm w-full rounded-md"></textarea>
+            </label>
+            <label for="resume">
+                <p class="text-sm mb-1">Resume<span class="text-red-500">*</span></p>
+                <input type="file" class="mb-3" id="">
+            </label>
+            
+            <label for="1">
+                <p class="text-sm mb-1">What is Eloquent<span class="text-red-500">*</span></p>
+                <input type="text" class="mb-3 resize-none shade outline-none p-1 text-sm w-full rounded-md" id="1">
+            </label>
+
+            <label for="1">
+                <p class="text-sm mb-1">Write 2-3 dates for an interview</p>
+                <textarea type="text" rows="4" id="cover_letter" class="mb-3 resize-none shade outline-none p-1 text-sm w-full rounded-md"></textarea>
+            </label>
+
+            <button class="bg-blue-500 text-white px-3 py-1 rounded-md mb-2">Apply</button>
+            <button class="bg-red-500 text-white px-3 py-1 rounded-md mb-2">Cancel</button>
+        </section>
+    </main>
+</body>
+</html>
