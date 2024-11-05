@@ -36,11 +36,16 @@ import InputMarkup from "./Utils/InputMarkup.vue";
 import useFetch from "./composables/fetch";
 
 const url = ref(`/api/internships`);
-const { internshipsData, is_loading, is_loading_more, next } = useFetch(url);
+const show_global_loading = ref(false);
+const { internshipsData, is_loading, is_loading_more, next } = useFetch(
+  url,
+  show_global_loading
+);
 const keyword = ref();
 
-const searchInternships = async () => {
+const searchInternships = () => {
   internshipsData.value = [];
+  show_global_loading.value = true;
   url.value = `/api/internships?keyword=${keyword.value}`;
 };
 
