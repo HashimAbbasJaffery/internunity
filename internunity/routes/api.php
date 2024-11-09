@@ -2,18 +2,17 @@
 
 use App\Http\Controllers\Api\AuthenticationController;
 use App\Http\Controllers\InternshipController;
+use App\Http\Controllers\User\UserController;
 use App\Http\Middleware\IsLoggedin;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
+Route::get("/user", [UserController::class, "get"]);
+Route::patch("/user/update", [UserController::class, "edit"]);
 
 Route::post("login", [AuthenticationController::class, "login"])->name("login")
         ->middleware(IsLoggedin::class);
-
 Route::delete("logout", [AuthenticationController::class, "logout"])->name("logout");
 
 

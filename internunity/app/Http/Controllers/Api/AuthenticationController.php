@@ -32,6 +32,7 @@ class AuthenticationController extends Controller
     public function logout(Request $request) {
         $token = $request->bearerToken();
         $is_deleted = PersonalAccessToken::findToken($token)->delete();
+        if($is_deleted) $request->header("Authentication", "");
         return $is_deleted;
     }
 }

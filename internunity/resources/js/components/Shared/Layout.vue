@@ -13,7 +13,7 @@
             <a href="/internships.html">Internships</a>
           </li>
           <li class="hover:bg-shade hover:text-black px-3 py-1 rounded">
-            <a href="/profile.html">Profile</a>
+            <RouterLink to="/profile">Profile</RouterLink>
           </li>
           <li class="hover:bg-shade hover:text-black px-3 py-1 rounded">
             <a href="#">Companies</a>

@@ -15,8 +15,7 @@ class IsLoggedin
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $has_token = $request->header("Authentication");
-
+        $has_token = $request->bearerToken();
         if(!$has_token)
             return $next($request);
         else
