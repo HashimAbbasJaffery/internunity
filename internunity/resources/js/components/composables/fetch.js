@@ -1,6 +1,18 @@
 import { onMounted, ref, watchEffect, toValue } from "vue";
 import axios from "axios";
 
+const show_loading = (show_global_loading, is_loading) => {
+    if(toValue(show_global_loading) === true) {
+        is_loading.value = true;
+    }
+}
+
+const hideAllLoadings = (is_loading, is_loading_more, show_global_loading) => {
+    is_loading.value = false
+    is_loading_more.value = false;
+    show_global_loading.value = false;
+}
+
 export default function useFetch(url, show_global_loading) {
     const internshipsData = ref([]);
     const is_loading = ref(true);
@@ -9,9 +21,7 @@ export default function useFetch(url, show_global_loading) {
 
 
     const fetchData = () => {
-        if(toValue(show_global_loading) === true) {
-            is_loading.value = true;
-        }
+        show_loading(show_global_loading, is_loading);
         is_loading_more.value = true;
         axios.get(toValue(url))
             .then(res => {
@@ -22,9 +32,7 @@ export default function useFetch(url, show_global_loading) {
                 console.log(err)
             })
             .finally(() => {
-                is_loading.value = false
-                is_loading_more.value = false;
-                show_global_loading.value = false;
+                hideAllLoadings(is_loading, is_loading_more, show_global_loading);
             })
     }
 

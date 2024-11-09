@@ -10,6 +10,7 @@
 </template>
 
 <script setup>
+import { inject } from "vue";
 import Intership from "./Intership.vue";
 
 const props = defineProps({
