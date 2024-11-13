@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UserEditRequest;
 use Illuminate\Http\Request;
 use Laravel\Sanctum\PersonalAccessToken;
 use Storage;
@@ -14,13 +15,7 @@ class UserController extends Controller
         $token = PersonalAccessToken::findToken($token);
         return $token->tokenable()->select(["name", "email", "date_of_birth", "profile_pic"])->first();
     }
-    public function edit(Request $request) {
-
-        $request->validate([
-            "name" => ["required"],
-            "email" => ["email", "required"],
-            "date_of_birth" => ["required"]
-        ]);
+    public function edit(UserEditRequest $request) {
 
         $name = $request->name;
         $email = $request->email;
@@ -35,6 +30,11 @@ class UserController extends Controller
         }
 
         $token = PersonalAccessToken::find($request->bearerToken());
+
+        if($request->hasFile("profile_pic") && $token->tokenable->profile_pic) {
+            Storage::disk("public")->delete("/profile/{$token->tokenable->profile_pic}");
+        }
+
         $token->tokenable()->update([
             "name" => $name,
             "email" => $email,

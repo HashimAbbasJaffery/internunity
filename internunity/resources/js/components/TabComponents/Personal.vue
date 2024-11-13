@@ -20,6 +20,8 @@
           id="imageUploader"
           class="mb-3 rounded-full mx-auto cursor-pointer"
           width="90"
+          height="90"
+          style="width: 90px; height: 90px"
           alt=""
         />
 
@@ -34,27 +36,34 @@
       </label>
       <label for="name">
         <p class="text-sm mb-1">Name</p>
+        <p class="text-xs text-red-500 mb-1" v-if="errors.name">{{ errors.name[0] }}</p>
         <input
           type="text"
           id="name"
           v-model="user.name"
           class="mb-3 shade outline-none p-1 text-sm w-full rounded-md"
+          :class="{ 'border border-red-500': errors.name?.length ?? false }"
         />
       </label>
       <label for="email">
         <p class="text-sm mb-1">Email</p>
+        <p class="text-xs text-red-500 mb-1" v-if="errors.email">{{ errors.email[0] }}</p>
         <input
           type="email"
           id="email"
           v-model="user.email"
           class="shade mb-3 outline-none p-1 text-sm w-full rounded-md"
+          :class="{ 'border border-red-500': errors.email?.length ?? false }"
         />
       </label>
       <label for="dob">
         <p class="text-sm mb-1">Date of birth</p>
+
+        <p class="text-xs text-red-500 mb-1" v-if="errors.dob">{{ errors.dob[0] }}</p>
         <input
           type="date"
           id="dob"
+          :class="{ 'border border-red-500': errors.dob?.length ?? false }"
           v-model="user.dob"
           class="shade outline-none p-1 text-sm w-full rounded-md"
         />
@@ -62,10 +71,10 @@
       <button
         type="submit"
         :disabled="isLoading"
-        class="disabled:bg-base-alt/50 disabled:cursor-not-allowed bg-base-alt text-white px-3 py-1 rounded-md mt-3 flex justify-center items-center gap-2"
+        class="disabled:bg-base-alt/50 disabled:cursor-not-allowed bg-base-alt text-white px-3 py-1 rounded-md mt-3"
+        :class="{ 'flex justify-center items-center gap-2': isLoading }"
       >
         Update
-        <p></p>
         <Loader
           :is_loading="isLoading"
           className="loader loader-white loader-short"
@@ -79,6 +88,8 @@
 import { onMounted, reactive, ref, watch } from "vue";
 import Loader from "../Utils/Loader.vue";
 import usePost from "../composables/post";
+
+// Main Data source, which is providing data to be inserted in composables
 
 const getData = () => {
   const data = new FormData();
@@ -99,7 +110,7 @@ const user = reactive({
 });
 const isFileUploading = ref(false);
 const url = ref(`/api/user/update`);
-const { isLoading, addData } = usePost(url);
+const { isLoading, addData, errors } = usePost(url);
 
 onMounted(async () => {
   isFetching.value = true;

@@ -1,8 +1,9 @@
-import {ref, toValue} from "vue";;
+import {reactive, ref, toValue} from "vue";;
 
 export default function usePost(url) {
 
     const isLoading = ref(false);
+    const errors = ref({});
 
     const addData = (data, additionalLoader = null) => {
         isLoading.value = true;
@@ -13,6 +14,8 @@ export default function usePost(url) {
             })
             .catch(err => {
                 console.log(err);
+                if(err.status !== 422) return;
+                errors.value = {...err.response.data.errors};
             })
             .finally(() => {
                 isLoading.value = false;
@@ -21,6 +24,6 @@ export default function usePost(url) {
     }
 
 
-    return { isLoading, addData };
+    return { isLoading, addData, errors };
 
 }
