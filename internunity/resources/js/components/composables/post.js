@@ -1,19 +1,19 @@
-import {reactive, ref, toValue} from "vue";;
+import {ref, toValue} from "vue";;
 
 export default function usePost(url) {
 
     const isLoading = ref(false);
     const errors = ref({});
+    const returns = ref({});
 
     const addData = (data, additionalLoader = null) => {
         isLoading.value = true;
         if(additionalLoader) additionalLoader.value = true;
         axios.post(toValue(url), data)
             .then(res => {
-                console.log(res);
+                returns.value = res
             })
             .catch(err => {
-                console.log(err);
                 if(err.status !== 422) return;
                 errors.value = {...err.response.data.errors};
             })
@@ -23,7 +23,11 @@ export default function usePost(url) {
             })
     }
 
+    const sendRequest = (data, additionalLoader = null) => {
+        addData(data, additionalLoader);
+    }
 
-    return { isLoading, addData, errors };
+
+    return { isLoading, sendRequest, errors, returns };
 
 }

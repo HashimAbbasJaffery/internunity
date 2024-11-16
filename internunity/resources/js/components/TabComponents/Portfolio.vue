@@ -5,11 +5,35 @@
     v-if="Object.keys(project ?? [])?.length ?? false"
   >
     <div class="project bg-white w-1/2 p-3 rounded-md relative">
-      <div
-        @click="project = []"
-        class="cursor-pointer close bg-red-500 absolute p-1 right-5 top-5 px-2 rounded-md text-white"
-      >
-        <i class="fa-solid fa-xmark"></i>
+      <div class="icons relative">
+        <div
+          @click="showMenu = !showMenu"
+          class="cursor-pointer close bg-white absolute shade p-1 left-5 top-5 px-2 rounded-md text-white"
+          :class="{ 'bg-gray-200': showMenu }"
+        >
+          <i class="fa-solid fa-bars text-black"></i>
+        </div>
+        <div
+          @click="project = []"
+          class="cursor-pointer close bg-red-500 absolute p-1 right-5 mr-2 top-5 px-2 rounded-md text-white"
+        >
+          <i class="fa-solid fa-xmark"></i>
+        </div>
+        <div
+          class="actions-list absolute left-5 top-12 mt-3 bg-white mr-3 px-1 py-2 shade rounded w-1/6 text-center"
+          v-if="showMenu"
+        >
+          <ul class="space-y-1">
+            <li class="text-xs" @click="deleteProject(project.id)">
+              Delete
+              <i class="fa-solid fa-trash ml-1"></i>
+            </li>
+            <li class="text-xs">
+              Update
+              <i class="fa-solid fa-pen-to-square ml-1"></i>
+            </li>
+          </ul>
+        </div>
       </div>
       <img src="https://placehold.co/600x300" class="w-full rounded-md" alt="" />
       <h1 class="text-3xl font-bold mt-3 opacity-75">{{ project.title }}</h1>
@@ -91,7 +115,7 @@
         <p class="text-sm mb-1">Project Image</p>
         <input
           type="file"
-          id="name"
+          id="project_file"
           class="mb-3 shade outline-none p-1 text-sm w-full rounded-md"
         />
       </label>
@@ -163,20 +187,20 @@
   </section>
 </template>
 <script setup>
-import { onMounted, reactive, ref } from "vue";
+import { reactive, ref } from "vue";
 import useFetch from "../composables/fetch";
 import Loader from "../Utils/Loader.vue";
 import usePost from "../composables/post";
-import { add } from "lodash";
 
 const project = ref();
 const url = ref(`/api/user/projects`);
 const is_global_loading = ref(false);
-const { internshipsData, is_loading, is_loading_more, next } = useFetch(
+const { internshipsData, is_loading, is_loading_more, next, fetch, per_page } = useFetch(
   url,
   is_global_loading
 );
-const { isLoading, addData, errors } = usePost(`/api/user/project/create`);
+const postUrl = ref(`/api/user/project/create`);
+const { isLoading, sendRequest, errors } = usePost(postUrl);
 const addModal = ref(false);
 const newProject = reactive({
   title: "",
@@ -184,8 +208,24 @@ const newProject = reactive({
   github: "",
   description: "",
 });
+const showMenu = ref(false);
 
 const addProject = () => {
-  addData(newProject);
+  postUrl.value = `/api/user/project/create`;
+  sendRequest(newProject);
+  internshipsData.value = [];
+  is_loading.value = true;
+  url.value === "/api/user/projects" ? fetch() : (url.value = "/api/user/projects");
+  addModal.value = false;
+};
+
+const deleteProject = (id) => {
+  postUrl.value = `/api/user/project/${id}/delete`;
+  sendRequest({ _method: "delete" });
+  project.value = [];
+
+  internshipsData.value = [];
+  is_loading.value = true;
+  url.value === "/api/user/projects" ? fetch() : (url.value = "/api/user/projects");
 };
 </script>
