@@ -14,6 +14,7 @@ Route::patch("/user/update", [UserController::class, "edit"]);
 Route::get("/user/projects", [PortfolioController::class, "get"]);
 Route::post("/user/project/create", [PortfolioController::class, "store"]);
 Route::delete("/user/project/{project}/delete", [PortfolioController::class, "destroy"]);
+Route::put("/user/project/{project}/update", [PortfolioController::class, "edit"]);
 
 Route::post("login", [AuthenticationController::class, "login"])->name("login")
         ->middleware(IsLoggedin::class);

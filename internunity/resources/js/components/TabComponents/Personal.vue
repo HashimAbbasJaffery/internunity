@@ -110,7 +110,7 @@ const user = reactive({
 });
 const isFileUploading = ref(false);
 const url = ref(`/api/user/update`);
-const { isLoading, addData, errors } = usePost(url);
+const { isLoading, sendRequest, errors } = usePost(url);
 
 onMounted(async () => {
   isFetching.value = true;
@@ -128,7 +128,7 @@ const showImage = () => {
   reader.onload = async (e) => {
     const data = getData();
     data.append("profile_pic", profile.files[0]);
-    addData(data, isFileUploading);
+    sendRequest(data, isFileUploading);
     data.delete("profile_pic");
     imageUploader.src = e.target.result;
   };
@@ -137,6 +137,6 @@ const showImage = () => {
 
 const update = async (e) => {
   e.preventDefault();
-  addData(getData());
+  sendRequest(getData());
 };
 </script>

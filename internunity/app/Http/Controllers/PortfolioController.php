@@ -21,9 +21,10 @@ class PortfolioController extends Controller
         $token->tokenable->projects()->create([ ...$request->validated(), "to" => now(), "from" => now() ]);
         return 1;
     }
-
-    public function getPrevious() {
-
+    public function edit(PortfolioCreateRequest $request, Project $project, File $file) {
+        $file->upload($request->file("project"));
+        $project->update([ ...$request->validated(), "to" => now(), "from" => now() ]);
+        return 1;
     }
     public function destroy(Project $project) {
         $project->delete();
