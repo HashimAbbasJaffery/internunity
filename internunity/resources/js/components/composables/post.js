@@ -6,13 +6,15 @@ export default function usePost(url) {
     const errors = ref({});
     const returns = ref({});
 
-    const addData = (data, additionalLoader = null) => {
+    const addData = (data, additionalLoader = null, callback = null) => {
         isLoading.value = true;
         let hasErrors = false;
         if(additionalLoader) additionalLoader.value = true;
-        axios.post(toValue(url), data)
+        axios.post(toValue(url), data, { headers: { 'Content-Type': 'multipart/form-data' } })
             .then(res => {
+                console.log(res);
                 returns.value = res
+                callback();
             })
             .catch(err => {
                 console.log(err);
@@ -27,8 +29,8 @@ export default function usePost(url) {
         return hasErrors;
     }
 
-    const sendRequest = (data, additionalLoader = null) => {
-        console.log(addData(data, additionalLoader));
+    const sendRequest = (data, callback = null, additionalLoader = null) => {
+        addData(data, additionalLoader, callback);
     }
 
 

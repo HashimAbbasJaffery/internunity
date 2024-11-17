@@ -17,13 +17,15 @@ class PortfolioController extends Controller
     }
     public function store(PortfolioCreateRequest $request, File $file) {
         $token = PersonalAccessToken::findToken($request->bearerToken());
-        $file->upload($request->file("project"));
-        $token->tokenable->projects()->create([ ...$request->validated(), "to" => now(), "from" => now() ]);
+        $fileName = $file->upload($request->file("project_file"));
+        $token->tokenable->projects()->create([ ...$request->validated(), "to" => now(), "from" => now(), "project_pic" => $fileName ]);
         return 1;
     }
     public function edit(PortfolioCreateRequest $request, Project $project, File $file) {
-        $file->upload($request->file("project"));
-        $project->update([ ...$request->validated(), "to" => now(), "from" => now() ]);
+        $fileName = null;
+        if($request->hasFile("project_file"))
+            $fileName = $file->replace($project->project_pic, $request->file("project_file"));
+        $project->update([ ...$request->validated(), "to" => now(), "from" => now(), "project_pic" => $fileName ?: $project->project_pic ]);
         return 1;
     }
     public function destroy(Project $project) {

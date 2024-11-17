@@ -6,7 +6,7 @@
       @click="$emit('show', data)"
       class="cursor-pointer project hover:border-base-alt rounded-md p-1 mb-1"
     >
-      <Project></Project>
+      <Project :image="data.project_pic"></Project>
     </div>
   </div>
 </template>

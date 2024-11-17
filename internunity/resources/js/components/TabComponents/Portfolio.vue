@@ -83,15 +83,16 @@ const updateModal = ref(false);
 
 const addProject = (newProject) => {
   postUrl.value = `/api/user/project/create`;
-  sendRequest(newProject);
-  resetModalsAndRefetch();
-
-  clearAllFields();
+  sendRequest(newProject, function () {
+    resetModalsAndRefetch();
+    clearAllFields();
+  });
 };
 
 const resetModalsAndRefetch = () => {
   internshipsData.value = [];
   is_loading.value = true;
+
   url.value === "/api/user/projects" ? fetch() : (url.value = "/api/user/projects");
   updateModal.value = false;
   showMenu.value = false;
@@ -125,10 +126,11 @@ const update = () => {
 
 const editProject = (newProject) => {
   postUrl.value = `/api/user/project/${newProject.id}/update`;
-  sendRequest({ ...newProject, _method: "PUT" });
-  project.value = [];
+  sendRequest({ ...newProject, _method: "PUT" }, function () {
+    project.value = [];
 
-  resetModalsAndRefetch();
-  clearAllFields();
+    resetModalsAndRefetch();
+    clearAllFields();
+  });
 };
 </script>

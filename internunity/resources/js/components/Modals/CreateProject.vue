@@ -62,6 +62,7 @@
         <p class="text-sm mb-1">Project Image</p>
         <input
           type="file"
+          @change="upload_image"
           id="project_file"
           class="mb-3 shade outline-none p-1 text-sm w-full rounded-md"
         />
@@ -108,7 +109,12 @@ const newProject = reactive({
   github: "",
   description: "",
   id: "",
+  project_file: "",
 });
+
+const upload_image = () => {
+  newProject.project_file = project_file.files[0];
+};
 
 onMounted(() => {
   if (Object.keys(props.project).length) {

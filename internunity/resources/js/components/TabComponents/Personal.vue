@@ -21,7 +21,7 @@
           class="mb-3 rounded-full mx-auto cursor-pointer"
           width="90"
           height="90"
-          style="width: 90px; height: 90px"
+          style="width: 90px; height: 90px; object-fit: contain"
           alt=""
         />
 

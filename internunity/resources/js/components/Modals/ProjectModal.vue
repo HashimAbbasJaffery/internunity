@@ -34,7 +34,16 @@
           </ul>
         </div>
       </div>
-      <img src="https://placehold.co/600x300" class="w-full rounded-md" alt="" />
+      <img
+        :src="
+          project.project_pic
+            ? `/storage/projects/${project.project_pic}`
+            : 'https://placehold.co/600x300'
+        "
+        style="height: 300px; width: 100%; object-fit: contain"
+        class="w-full rounded-md"
+        alt=""
+      />
       <h1 class="text-3xl font-bold mt-3 opacity-75">{{ project.title }}</h1>
       <p class="mt-3 text-sm">
         {{ project.description }}

@@ -9,17 +9,22 @@ class File
     /**
      * Create a new class instance.
      */
-    public function __construct(
-        protected $filetype = 'public'
-    )
+    public function __construct()
     {}
 
-    public function upload($file) {
+    public function upload($file, $fileType = 'public') {
         if($file) {
             $fileName = time() . "." . $file->extension();
-            Storage::disk($this->filetype)->putFileAs("/projects/", $file, $fileName);
+            Storage::disk($fileType)->putFileAs("/projects/", $file, $fileName);
             return $fileName;
         }
-        return false;
+        return null;
     }
+    public function replace($deletingFileName, $uploadingFile, $fileType = 'public') {
+        if(Storage::disk($fileType)->exists("/projects/$deletingFileName")) {
+            Storage::disk($fileType)->delete("/projects/$deletingFileName");
+        }
+        return $this->upload($uploadingFile);
+    }
+
 }
