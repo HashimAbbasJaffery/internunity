@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Education;
 use App\Models\Experience;
 use App\Models\Internship;
 use App\Models\Project;
@@ -22,6 +23,7 @@ class DatabaseSeeder extends Seeder
         Experience::factory(50)->create();
         Internship::factory(50)->create();
         Tag::factory(50)->create();
+        Education::factory(50)->create();
 
         $existing_combinations = [];
         for($i = 0; $i < 50; $i++) {
@@ -34,7 +36,6 @@ class DatabaseSeeder extends Seeder
                 "tag_id" => $arrays[0],
                 "internship_id" => $arrays[1]
             ]);
-
 
             \DB::table("liked_internships")->insert([
                 "user_id" => $arrays[0],

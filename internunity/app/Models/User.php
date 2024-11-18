@@ -58,6 +58,9 @@ class User extends Authenticatable
     public function experiences() {
         return $this->hasMany(Experience::class);
     }
+    public function educations() {
+        return $this->hasMany(Education::class);
+    }
     public function getUser() {{
         $token = PersonalAccessToken::findToken(request()->bearerToken());
         return $token->tokenable;

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthenticationController;
+use App\Http\Controllers\EducationController;
 use App\Http\Controllers\ExperienceController;
 use App\Http\Controllers\InternshipController;
 use App\Http\Controllers\PortfolioController;
@@ -21,6 +22,9 @@ Route::put("/user/project/{project}/update", [PortfolioController::class, "edit"
 Route::get("/user/experiences", [ExperienceController::class, "get"]);
 Route::post("/user/experience/create", [ExperienceController::class, "store"]);
 Route::put("/experience/{experience}/update", [ExperienceController::class, "update"]);
+
+Route::get("/user/educations", [EducationController::class, "get"]);
+Route::post("/user/education/create", [EducationController::class, "store"]);
 
 Route::post("login", [AuthenticationController::class, "login"])->name("login")
         ->middleware(IsLoggedin::class);
