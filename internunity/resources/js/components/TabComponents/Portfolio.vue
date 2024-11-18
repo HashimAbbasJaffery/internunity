@@ -33,17 +33,19 @@
     class="shade w-2/3 p-3 rounded-md"
     :class="{ 'flex justify-center items-center': is_loading }"
   >
-    <div class="content" v-if="internshipsData.length">
+    <div class="content" v-if="!is_loading">
       <Heading>Projects</Heading>
       <Button @click="addModal = true">Create</Button>
-      <Projects :internshipsData="internshipsData" @show="project = $event"></Projects>
-
-      <load-more-button
-        v-if="next"
-        :is_loading="is_loading_more"
-        :next="next"
-        @next="url = $event"
-      ></load-more-button>
+      <div v-if="internshipsData.length">
+        <Projects :internshipsData="internshipsData" @show="project = $event"></Projects>
+        <load-more-button
+          v-if="next"
+          :is_loading="is_loading_more"
+          :next="next"
+          @next="url = $event"
+        ></load-more-button>
+      </div>
+      <div v-else class="bg-red-500 text-white p-2 rounded-md mt-3">No Project found</div>
     </div>
     <Loader v-else :is_loading="is_loading" class="loader"></Loader>
   </section>

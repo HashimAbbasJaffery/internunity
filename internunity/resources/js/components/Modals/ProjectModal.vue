@@ -40,7 +40,7 @@
             ? `/storage/projects/${project.project_pic}`
             : 'https://placehold.co/600x300'
         "
-        style="height: 300px; width: 100%; object-fit: contain"
+        style="height: 300px; width: 100%; object-fit: cover"
         class="w-full rounded-md"
         alt=""
       />

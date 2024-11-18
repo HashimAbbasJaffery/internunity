@@ -6,13 +6,19 @@
       </div>
       <nav>
         <ul class="flex items-center space-x-2">
-          <li class="bg-shade px-3 rounded py-1 text-black">
+          <li
+            class="px-3 rounded py-1"
+            :class="{ 'bg-shade text-black': $route.name === 'home' }"
+          >
             <RouterLink to="/">Apply</RouterLink>
           </li>
           <li class="hover:bg-shade hover:text-black px-3 py-1 rounded">
             <a href="/internships.html">Internships</a>
           </li>
-          <li class="hover:bg-shade hover:text-black px-3 py-1 rounded">
+          <li
+            class="hover:bg-shade hover:text-black px-3 py-1 rounded"
+            :class="{ 'bg-shade text-black': $route.name === 'profile' }"
+          >
             <RouterLink to="/profile">Profile</RouterLink>
           </li>
           <li class="hover:bg-shade hover:text-black px-3 py-1 rounded">

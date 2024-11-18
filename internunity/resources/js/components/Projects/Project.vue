@@ -2,7 +2,7 @@
   <img
     :src="image ? `/storage/projects/${image}` : 'https://placehold.co/95x95'"
     class="rounded-md"
-    style="width: 95px; height: 95px; object-fit: contain"
+    style="width: 95px; height: 95px; object-fit: cover"
     alt=""
   />
 </template>
