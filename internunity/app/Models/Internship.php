@@ -14,4 +14,7 @@ class Internship extends Model
     public function hearted_by() {
         return $this->belongsToMany(User::class, "liked_internships");
     }
+    public function applications() {
+        return $this->hasMany(Application::class);
+    }
 }

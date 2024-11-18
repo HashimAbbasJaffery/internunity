@@ -12,8 +12,11 @@
           >
             <RouterLink to="/">Apply</RouterLink>
           </li>
-          <li class="hover:bg-shade hover:text-black px-3 py-1 rounded">
-            <a href="/internships.html">Internships</a>
+          <li
+            class="hover:bg-shade hover:text-black px-3 py-1 rounded"
+            :class="{ 'bg-shade text-black': $route.name === 'applications' }"
+          >
+            <a href="/applications">Internships</a>
           </li>
           <li
             class="hover:bg-shade hover:text-black px-3 py-1 rounded"

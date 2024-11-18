@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthenticationController;
+use App\Http\Controllers\ApplicationController;
 use App\Http\Controllers\EducationController;
 use App\Http\Controllers\ExperienceController;
 use App\Http\Controllers\InternshipController;
@@ -25,6 +26,8 @@ Route::put("/experience/{experience}/update", [ExperienceController::class, "upd
 
 Route::get("/user/educations", [EducationController::class, "get"]);
 Route::post("/user/education/create", [EducationController::class, "store"]);
+
+Route::get("/user/applications", [ApplicationController::class, "get"]);
 
 Route::post("login", [AuthenticationController::class, "login"])->name("login")
         ->middleware(IsLoggedin::class);

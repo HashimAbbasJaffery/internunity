@@ -61,6 +61,9 @@ class User extends Authenticatable
     public function educations() {
         return $this->hasMany(Education::class);
     }
+    public function applications() {
+        return $this->hasMany(Application::class);
+    }
     public function getUser() {{
         $token = PersonalAccessToken::findToken(request()->bearerToken());
         return $token->tokenable;
