@@ -45,7 +45,7 @@
           @next="url = $event"
         ></load-more-button>
       </div>
-      <div v-else class="bg-red-500 text-white p-2 rounded-md mt-3">No Project found</div>
+      <result-not-found v-else>No Project found</result-not-found>
     </div>
     <Loader v-else :is_loading="is_loading" class="loader"></Loader>
   </section>
@@ -61,6 +61,7 @@ import Button from "../Utils/Button.vue";
 import Heading from "../Utils/Heading.vue";
 import Projects from "../Projects/Projects.vue";
 import LoadMoreButton from "../Utils/LoadMoreButton.vue";
+import ResultNotFound from "../Utils/ResultNotFound.vue";
 
 const UpdateProject = CreateProject;
 const project = ref();
