@@ -1,6 +1,6 @@
 <template>
   <experience-modal
-    :isLoading="false"
+    :isLoading="isLoading"
     v-if="is_adding"
     :errors="errors"
     @close="is_adding = false"
@@ -45,7 +45,7 @@
 </template>
 <script setup>
 import useFetch from "../composables/fetch";
-import { ref } from "vue";
+import { ref, provide } from "vue";
 import moment from "moment";
 import Loader from "../Utils/Loader.vue";
 import Button from "../Utils/Button.vue";

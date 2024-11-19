@@ -33,8 +33,11 @@
           ></LoadMore>
         </div>
       </section>
-      <div class="loader flex justify-center items-center">
-        <loader v-if="is_loading" :is_loading="true" class="loader"></loader>
+      <div
+        class="relative internship bg-white rounded-md p-2 hover:bg-grey cursor-pointer w-2/3 container mx-auto mt-9"
+        v-if="is_loading"
+      >
+        <loading-skeleton v-for="i in 8" :key="i"></loading-skeleton>
       </div>
       <result-not-found
         v-if="!(internshipsData.length || is_loading)"
@@ -48,7 +51,7 @@
 import useFetch from "./composables/fetch";
 import { ref } from "vue";
 import Intership from "./Internee/Intership.vue";
-import Loader from "./Utils/Loader.vue";
+import LoadingSkeleton from "./Utils/LoadingSkeleton.vue";
 import LoadMore from "./Utils/LoadMore.vue";
 import ApplicationStatus from "./Utils/ApplicationStatus.vue";
 import ResultNotFound from "./Utils/ResultNotFound.vue";

@@ -1,7 +1,6 @@
 <template>
   <EducationModal
-    dal
-    :isLoading="false"
+    :isLoading="isLoading"
     v-if="is_adding"
     :errors="errors"
     @close="is_adding = false"

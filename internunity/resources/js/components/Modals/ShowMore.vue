@@ -1,6 +1,5 @@
 <template>
   <section
-    v-if="Object.keys(internship).length"
     id="internship-modal"
     class="bg-black/75 fixed w-full h-full top-0 flex justify-center items-center z-10"
   >
@@ -35,13 +34,13 @@
       <div class="actions space-x-2">
         <button
           @click="$emit('apply')"
-          :disabled="internship.applications.length"
+          :disabled="is_applied"
           class="disabled:bg-blue-500/50 disabled:cursor-not-allowed bg-blue-500 text-white px-3 py-1 rounded-md mt-5 text-xs"
         >
           Apply
         </button>
         <button
-          @click="internship = []"
+          @click="$emit('close')"
           class="bg-red-500 text-white px-3 py-1 rounded-md mt-5 text-xs"
         >
           Cancel
@@ -51,8 +50,12 @@
   </section>
 </template>
 <script setup>
-import { inject } from "vue";
+import { inject, provide } from "vue";
 import moment from "moment";
 
-const internship = inject("internship");
+const props = defineProps({
+  internship: Object,
+});
+
+const is_applied = provide("is_applied");
 </script>

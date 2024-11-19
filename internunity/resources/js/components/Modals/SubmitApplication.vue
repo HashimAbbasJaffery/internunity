@@ -21,10 +21,14 @@
       </label>
       <label for="name" class="w-1/2">
         <p class="text-sm mb-1">Resume</p>
+        <p class="text-red-500 text-xs mb-1" v-if="errors.resume">
+          {{ errors.resume[0] }}
+        </p>
         <input
           type="file"
           @change="upload_image"
           id="resume"
+          :class="{ 'border border-red-500': errors.cover_letter?.length ?? false }"
           class="mb-3 shade outline-none p-1 text-sm w-full rounded-md"
         />
       </label>
@@ -36,7 +40,6 @@
           :class="{ 'flex justify-center items-center gap-2': isLoading }"
         >
           Add
-
           <Loader
             :is_loading="isLoading"
             className="loader loader-white loader-short"
@@ -53,10 +56,9 @@
   </section>
 </template>
 <script setup>
-import { onMounted, reactive } from "vue";
+import { inject, onMounted, reactive } from "vue";
 
 const props = defineProps({
-  isLoading: Boolean,
   errors: Object,
   project: {
     default: {},
@@ -83,4 +85,6 @@ onMounted(() => {
     newApplication.id = props.project.id;
   }
 });
+
+const isLoading = inject("is_loading");
 </script>
