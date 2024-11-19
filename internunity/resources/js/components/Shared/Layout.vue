@@ -16,7 +16,7 @@
             class="hover:bg-shade hover:text-black px-3 py-1 rounded"
             :class="{ 'bg-shade text-black': $route.name === 'applications' }"
           >
-            <a href="/applications">Internships</a>
+            <RouterLink to="/applications">Internships</RouterLink>
           </li>
           <li
             class="hover:bg-shade hover:text-black px-3 py-1 rounded"

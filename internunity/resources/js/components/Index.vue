@@ -1,6 +1,13 @@
 <template>
   <Layout>
-    <ShowMore></ShowMore>
+    <ShowMore @apply="apply"></ShowMore>
+    <submit-application
+      @create="createApplication($event)"
+      :is_loading="isLoading"
+      v-if="is_creating_application"
+      :errors="errors"
+      @close="is_creating_application = false"
+    ></submit-application>
     <main>
       <section id="search" class="container mx-auto w-2/3 flex justify-between">
         <InputMarkup v-model="keyword" @search="keyword = $event"></InputMarkup>
@@ -42,6 +49,8 @@ import InputMarkup from "./Utils/InputMarkup.vue";
 import useFetch from "./composables/fetch";
 import ShowMore from "./Modals/ShowMore.vue";
 import Layout from "./Shared/Layout.vue";
+import SubmitApplication from "./Modals/SubmitApplication.vue";
+import usePost from "./composables/post";
 
 const url = ref(`/api/internships`);
 const internship = ref([]);
@@ -52,7 +61,10 @@ const { internshipsData, is_loading, is_loading_more, next } = useFetch(
   url,
   show_global_loading
 );
+const postUrl = ref(`/api/user/${internship.id}/application/create`);
+const { isLoading, sendRequest, errors, returns } = usePost(postUrl);
 const keyword = ref();
+const is_creating_application = ref(false);
 
 const searchInternships = () => {
   internshipsData.value = [];
@@ -61,7 +73,16 @@ const searchInternships = () => {
 };
 
 watch(keyword, debounce(searchInternships, 500));
-watch(internship, function () {
-  console.log(internship.value);
-});
+
+const apply = () => {
+  is_creating_application.value = true;
+};
+
+const createApplication = (application) => {
+  postUrl.value = `/api/user/${internship.value.id}/application/create`;
+  sendRequest(application, function () {
+    is_creating_application.value = false;
+    internship.value = [];
+  });
+};
 </script>

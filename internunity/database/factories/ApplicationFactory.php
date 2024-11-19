@@ -20,7 +20,9 @@ class ApplicationFactory extends Factory
         return [
             "internship_id" => fake()->numberBetween(1, 50),
             "status" => fake()->randomElement($status),
-            "user_id" => fake()->numberBetween(1, 50)
+            "user_id" => fake()->numberBetween(1, 50),
+            "cover_letter" => fake()->text(),
+            "resume" => null
         ];
     }
 }

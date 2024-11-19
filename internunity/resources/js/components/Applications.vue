@@ -1,55 +1,26 @@
 <template>
   <layout>
     <main>
-      <div class="tags my-3 container mx-auto w-2/3 space-x-2">
-        <span
-          class="tag text-xs rounded-full cursor-pointer p-2"
-          :class="{
-            'bg-base-alt text-black': internshipType === 'applied',
-            'bg-black text-white': internshipType !== 'applied',
-          }"
-          @click="changeType('applied')"
-          >Applied (10)</span
-        >
-        <span
-          class="tag text-xs rounded-full cursor-pointer p-2"
-          :class="{
-            'bg-base-alt text-black': internshipType === 'interviewing',
-            'bg-black text-white': internshipType !== 'interviewing',
-          }"
-          @click="changeType('interviewing')"
-          >Interviewing (1)</span
-        >
-        <span
-          class="tag text-xs rounded-full cursor-pointer p-2"
-          @click="changeType('rejected')"
-          :class="{
-            'bg-base-alt text-black': internshipType === 'rejected',
-            'bg-black text-white': internshipType !== 'rejected',
-          }"
-          >Rejected (9)</span
-        >
-        <span
-          class="tag text-xs rounded-full cursor-pointer p-2"
-          @click="changeType('selected')"
-          :class="{
-            'bg-base-alt text-black': internshipType === 'selected',
-            'bg-black text-white': internshipType !== 'selected',
-          }"
-          >Selected (0)</span
-        >
-      </div>
+      <application-status
+        :internshipType="internshipType"
+        @changeType="changeType($event)"
+      ></application-status>
       <section
         id="internships"
         class="container mx-auto mt-9 w-2/3 divide-y-2"
         :class="{ 'flex justify-center items-center': is_loading }"
+        v-if="internshipsData.length"
       >
         <div
           v-for="data in internshipsData"
           :key="data.id"
           class="relative internship bg-white mt-3 rounded-md p-2 hover:bg-grey cursor-pointer"
         >
-          <Intership :internship="data.internship" :is_loading="is_loading"></Intership>
+          <Intership
+            :is_applied="true"
+            :internship="data.internship"
+            :is_loading="is_loading"
+          ></Intership>
         </div>
         <div
           class="load-button w-full text-center m-3 flex justify-center"
@@ -61,17 +32,26 @@
             @click="url = next"
           ></LoadMore>
         </div>
-        <loader v-if="is_loading" :is_loading="true" class="loader"></loader>
       </section>
+      <div class="loader flex justify-center items-center">
+        <loader v-if="is_loading" :is_loading="true" class="loader"></loader>
+      </div>
+      <result-not-found
+        v-if="!(internshipsData.length || is_loading)"
+        class="container mx-auto w-2/3 mt-6"
+        >You haven’t applied for an internship yet!</result-not-found
+      >
     </main>
   </layout>
 </template>
 <script setup>
 import useFetch from "./composables/fetch";
-import { onMounted, ref, watch } from "vue";
+import { ref } from "vue";
 import Intership from "./Internee/Intership.vue";
 import Loader from "./Utils/Loader.vue";
 import LoadMore from "./Utils/LoadMore.vue";
+import ApplicationStatus from "./Utils/ApplicationStatus.vue";
+import ResultNotFound from "./Utils/ResultNotFound.vue";
 
 const global_loading = ref(false);
 const internshipType = ref("applied");

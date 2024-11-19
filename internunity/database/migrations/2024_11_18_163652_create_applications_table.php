@@ -16,6 +16,8 @@ return new class extends Migration
             $table->foreignId("internship_id")->constrained()->cascadeOnDelete();
             $table->enum("status", ["applied", "interviewing", "rejected", "selected"]);
             $table->foreignId("user_id")->constrained()->cascadeOnDelete();
+            $table->text("cover_letter")->nullable();
+            $table->string("resume")->nullable();
             $table->timestamps();
         });
     }

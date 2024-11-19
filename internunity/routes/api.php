@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AuthenticationController;
 use App\Http\Controllers\ApplicationController;
+use App\Http\Controllers\ApplicationStatusController;
 use App\Http\Controllers\EducationController;
 use App\Http\Controllers\ExperienceController;
 use App\Http\Controllers\InternshipController;
@@ -28,6 +29,9 @@ Route::get("/user/educations", [EducationController::class, "get"]);
 Route::post("/user/education/create", [EducationController::class, "store"]);
 
 Route::get("/user/applications", [ApplicationController::class, "get"]);
+Route::post("/user/{internship}/application/create", [ApplicationController::class, "store"]);
+
+Route::get("/status/get", [ApplicationStatusController::class, "get"]);
 
 Route::post("login", [AuthenticationController::class, "login"])->name("login")
         ->middleware(IsLoggedin::class);

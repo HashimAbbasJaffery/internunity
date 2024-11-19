@@ -9,6 +9,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Laravel\Sanctum\PersonalAccessToken;
+use Mockery\Undefined;
 
 class User extends Authenticatable
 {
@@ -66,7 +67,7 @@ class User extends Authenticatable
     }
     public function getUser() {{
         $token = PersonalAccessToken::findToken(request()->bearerToken());
-        return $token->tokenable;
+        return $token?->tokenable ?? null;
     }}
     public function isOwnerOf(Model $model) {
         return $model->user_id === ($this->getUser())->id;

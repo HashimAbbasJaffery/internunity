@@ -33,7 +33,11 @@
         >
       </p>
       <div class="actions space-x-2">
-        <button class="bg-blue-500 text-white px-3 py-1 rounded-md mt-5 text-xs">
+        <button
+          @click="$emit('apply')"
+          :disabled="internship.applications.length"
+          class="disabled:bg-blue-500/50 disabled:cursor-not-allowed bg-blue-500 text-white px-3 py-1 rounded-md mt-5 text-xs"
+        >
           Apply
         </button>
         <button

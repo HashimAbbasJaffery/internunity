@@ -5,7 +5,11 @@
     :key="internship.id"
     class="relative internship bg-white mt-3 rounded-md p-2 hover:bg-grey cursor-pointer"
   >
-    <Intership :internship="internship" :is_loading="is_loading"></Intership>
+    <Intership
+      :is_applied="internship.applications?.length ?? false"
+      :internship="internship"
+      :is_loading="is_loading"
+    ></Intership>
   </div>
 </template>
 

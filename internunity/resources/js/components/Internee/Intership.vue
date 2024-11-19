@@ -1,6 +1,12 @@
 <template>
   <div @click="internshipData = internship">
     <div class="actions absolute right-5 flex gap-2 text-xs">
+      <div
+        class="bg-blue-500 text-white rounded flex justify-center items-center p-2 text-normal"
+        v-if="is_applied"
+      >
+        Applied
+      </div>
       <button class="bg-base-alt px-2 py-1 text-white rounded-md">
         <i class="fa-solid fa-heart text-black"></i>
       </button>
@@ -32,6 +38,7 @@ import { inject } from "vue";
 const props = defineProps({
   internship: Object,
   is_loading: Boolean,
+  is_applied: Boolean,
 });
 
 let internshipData = inject("internship");
