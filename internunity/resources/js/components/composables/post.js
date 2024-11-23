@@ -14,7 +14,7 @@ export default function usePost(url) {
             .then(res => {
                 console.log(res);
                 returns.value = res
-                callback && callback();
+                callback && callback(res);
             })
             .catch(err => {
                 console.log(err);

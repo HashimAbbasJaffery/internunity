@@ -7,35 +7,22 @@
       ></application-status>
       <section
         id="internships"
-        class="container mx-auto mt-9 w-2/3 divide-y-2"
+        class="container mx-auto mt-9 w-2/3"
         :class="{ 'flex justify-center items-center': is_loading }"
-        v-if="internshipsData.length"
       >
-        <div
-          v-for="data in internshipsData"
-          :key="data.id"
-          class="relative internship bg-white mt-3 rounded-md p-2 hover:bg-grey cursor-pointer"
-        >
-          <Intership
-            :is_applied="true"
-            :internship="data.internship"
-            :is_loading="is_loading"
-          ></Intership>
-        </div>
-        <div
-          class="load-button w-full text-center m-3 flex justify-center"
-          v-if="!is_loading && next"
-        >
-          <LoadMore
-            v-if="next"
-            :is_loading="is_loading_more"
-            @click="url = next"
-          ></LoadMore>
-        </div>
+        <custom-internships-data
+          v-if="!is_loading"
+          :internships="internshipsData.map((application) => application.internship)"
+          :is_loading="is_loading"
+          :is_loading_more="is_loading_more"
+          :next="next"
+          @reported="reported"
+          @next="url = next"
+        ></custom-internships-data>
       </section>
       <div
-        class="relative internship bg-white rounded-md p-2 hover:bg-grey cursor-pointer w-2/3 container mx-auto mt-9"
         v-if="is_loading"
+        class="container w-2/3 mx-auto relative internship bg-white mt-3 rounded-md p-2 hover:bg-grey cursor-pointer"
       >
         <loading-skeleton v-for="i in 8" :key="i"></loading-skeleton>
       </div>
@@ -50,11 +37,10 @@
 <script setup>
 import useFetch from "./composables/fetch";
 import { ref } from "vue";
-import Intership from "./Internee/Intership.vue";
-import LoadingSkeleton from "./Utils/LoadingSkeleton.vue";
-import LoadMore from "./Utils/LoadMore.vue";
 import ApplicationStatus from "./Utils/ApplicationStatus.vue";
 import ResultNotFound from "./Utils/ResultNotFound.vue";
+import CustomInternshipsData from "./Internee/CustomInternshipsData.vue";
+import LoadingSkeleton from "./Utils/LoadingSkeleton.vue";
 
 const global_loading = ref(false);
 const internshipType = ref("applied");
@@ -70,5 +56,13 @@ const changeType = (type) => {
   internshipType.value = type;
   is_loading.value = true;
   url.value = `/api/user/applications?type=${type}`;
+};
+
+const reported = () => {
+  let i = per_page.value;
+  while (i--) {
+    internshipsData.value.pop();
+  }
+  fetch();
 };
 </script>

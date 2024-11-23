@@ -5,8 +5,11 @@ use App\Http\Controllers\ApplicationController;
 use App\Http\Controllers\ApplicationStatusController;
 use App\Http\Controllers\EducationController;
 use App\Http\Controllers\ExperienceController;
+use App\Http\Controllers\HeartActionController;
 use App\Http\Controllers\InternshipController;
 use App\Http\Controllers\PortfolioController;
+use App\Http\Controllers\ReportController;
+use App\Http\Controllers\ReportTypeController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Middleware\IsLoggedin;
 use App\Models\User;
@@ -31,7 +34,12 @@ Route::post("/user/education/create", [EducationController::class, "store"]);
 Route::get("/user/applications", [ApplicationController::class, "get"]);
 Route::post("/user/{internship}/application/create", [ApplicationController::class, "store"]);
 
+Route::post("/user/{internship}/heart", [HeartActionController::class, "store"]);
+
 Route::get("/status/get", [ApplicationStatusController::class, "get"]);
+
+Route::post("/user/{internship}/report", [ReportController::class, "store"]);
+Route::get("/report_types", [ReportTypeController::class, "get"]);;
 
 Route::post("login", [AuthenticationController::class, "login"])->name("login")
         ->middleware(IsLoggedin::class);

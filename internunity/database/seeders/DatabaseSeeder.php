@@ -7,6 +7,8 @@ use App\Models\Education;
 use App\Models\Experience;
 use App\Models\Internship;
 use App\Models\Project;
+use App\Models\Report;
+use App\Models\ReportType;
 use App\Models\Tag;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -47,5 +49,10 @@ class DatabaseSeeder extends Seeder
         Project::factory(50)->create();
 
         Application::factory(50)->create();
+
+        ReportType::factory(5)->create();
+
+        Report::factory(10)->create();
+
     }
 }

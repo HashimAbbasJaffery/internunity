@@ -65,6 +65,9 @@ class User extends Authenticatable
     public function applications() {
         return $this->hasMany(Application::class);
     }
+    public function reports() {
+        return $this->hasMany(Report::class);
+    }
     public function getUser() {{
         $token = PersonalAccessToken::findToken(request()->bearerToken());
         return $token?->tokenable ?? null;

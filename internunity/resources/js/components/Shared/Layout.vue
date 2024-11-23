@@ -24,9 +24,6 @@
           >
             <RouterLink to="/profile">Profile</RouterLink>
           </li>
-          <li class="hover:bg-shade hover:text-black px-3 py-1 rounded">
-            <a href="#">Companies</a>
-          </li>
           <li
             v-if="isLoggedin"
             class="hover:bg-shade hover:text-black px-3 py-1 rounded"

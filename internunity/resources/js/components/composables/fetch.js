@@ -26,8 +26,7 @@ export default function useFetch(url, show_global_loading) {
         is_loading_more.value = true;
         axios.get(toValue(url))
             .then(res => {
-                console.log(res);
-                per_page.value = res.data.per_page;
+                per_page.value = res.data.data.length;
                 internshipsData.value.push(...res.data.data);
                 next.value = res.data.links[res.data.links.length - 1].url;
             })
