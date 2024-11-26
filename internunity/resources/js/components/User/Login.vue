@@ -34,11 +34,14 @@
             placeholder="Password"
           />
         </label>
-        <input
+        <button
           type="submit"
-          class="shade w-full outline-none rounded-md px-3 py-2 mt-3"
-          value="Login"
-        />
+          :disabled="is_checking"
+          class="bg-base-alt disabled:bg-base-alt/50 disabled:cursor-not-allowed shade w-full outline-none rounded-md px-3 py-2 mt-3"
+        >
+          <span v-if="!is_checking">Login</span>
+          <Loader v-else class="loader loader-short"></Loader>
+        </button>
       </form>
     </div>
   </Layout>
@@ -47,6 +50,7 @@
 import { reactive, ref } from "vue";
 import { useRouter } from "vue-router";
 import Layout from "../Shared/Layout.vue";
+import Loader from "../Utils/Loader.vue";
 
 const router = useRouter();
 
@@ -59,9 +63,11 @@ const errors = reactive({
   password: [],
 });
 const invalidCredentials = ref(false);
+const is_checking = ref(false);
 
 const login = async (e) => {
   e.preventDefault();
+  is_checking.value = true;
   try {
     errors.email = [];
     errors.password = [];
@@ -83,6 +89,8 @@ const login = async (e) => {
     if (e.status !== 422) return;
     errors.email = e.response.data.errors?.email ?? [];
     errors.password = e.response.data.errors?.password ?? [];
+  } finally {
+    is_checking.value = false;
   }
 };
 </script>

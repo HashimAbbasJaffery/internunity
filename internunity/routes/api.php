@@ -1,12 +1,15 @@
 <?php
 
+use App\Events\SendMessage;
 use App\Http\Controllers\Api\AuthenticationController;
 use App\Http\Controllers\ApplicationController;
 use App\Http\Controllers\ApplicationStatusController;
+use App\Http\Controllers\ChatController;
 use App\Http\Controllers\EducationController;
 use App\Http\Controllers\ExperienceController;
 use App\Http\Controllers\HeartActionController;
 use App\Http\Controllers\InternshipController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PortfolioController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ReportTypeController;
@@ -15,6 +18,9 @@ use App\Http\Middleware\IsLoggedin;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+
+Route::get("/send_message", [ChatController::class, "get"])->middleware("auth:api");
+Route::post("/notification/{user}", [NotificationController::class, "notify"]);
 
 Route::get("/user", [UserController::class, "get"]);
 Route::patch("/user/update", [UserController::class, "edit"]);

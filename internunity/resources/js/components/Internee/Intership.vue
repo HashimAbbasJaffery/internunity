@@ -35,11 +35,16 @@
       >
         Applied
       </div>
-      <button class="bg-base-alt px-2 py-1 text-white rounded-md" @click="heart">
+      <button
+        v-if="is_logged_in"
+        class="bg-base-alt px-2 py-1 text-white rounded-md"
+        @click="heart"
+      >
         <i class="fa-solid fa-heart text-black" v-if="!is_hearted"></i>
         <i class="fa-regular fa-heart" v-else></i>
       </button>
       <button
+        v-if="is_logged_in"
         class="notify bg-red-500 text-white px-2 py-1 rounded-md"
         @click="is_reporting = true"
       >
@@ -67,7 +72,7 @@
 </template>
 <script setup>
 import moment from "moment";
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import ShowMore from "../Modals/ShowMore.vue";
 import usePost from "../composables/post";
 import SubmitApplication from "../Modals/SubmitApplication.vue";
@@ -92,6 +97,8 @@ const apply = () => {
   is_creating_application.value = true;
   showMore.value = false;
 };
+
+const is_logged_in = computed(() => localStorage.token?.length ?? false);
 
 const createApplication = (application) => {
   isLoading.value = true;

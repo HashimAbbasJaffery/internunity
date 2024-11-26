@@ -49,6 +49,16 @@ import Personal from "./TabComponents/Personal.vue";
 import Portfolio from "./TabComponents/Portfolio.vue";
 import Experiences from "./TabComponents/Experiences.vue";
 import Education from "./TabComponents/Education.vue";
+import axios from "axios";
 
 const tab = ref("personal");
+
+axios
+  .get("/api/send_message")
+  .then((res) => {
+    console.log(res);
+  })
+  .catch((err) => {
+    console.log(err);
+  });
 </script>

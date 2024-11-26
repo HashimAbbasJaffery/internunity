@@ -1,4 +1,15 @@
 <template>
+  <div
+    v-if="has_notification"
+    class="notification bg-white fixed bottom-0 right-0 border border-black p-3 m-3 rounded z-10 animate__animated"
+    :class="{
+      animate__backInRight: has_notification,
+    }"
+    style="width: 300px"
+  >
+    <h1 class="font-bold">Message</h1>
+    <p>{{ notification_sender }}: {{ notification_message }}</p>
+  </div>
   <header class="bg-base text-white py-4">
     <div class="container mx-auto w-2/3 flex justify-between items-center">
       <div class="logo">
@@ -34,6 +45,16 @@
           <li v-else class="hover:bg-shade hover:text-black px-3 py-1 rounded">
             <RouterLink to="/login">Login</RouterLink>
           </li>
+          <li class="hover:bg-shade hover:text-black px-3 py-1 rounded relative">
+            <div
+              v-if="notification_icon"
+              class="has-notifications bg-base-alt rounded-full absolute right-2 top-1 animate__animated"
+              style="width: 10px; height: 10px"
+            >
+              &nbsp;
+            </div>
+            <i class="fa-solid fa-bell animate__animated"></i>
+          </li>
         </ul>
       </nav>
     </div>
@@ -44,10 +65,15 @@
 <script setup>
 import { RouterLink } from "vue-router";
 import { useRouter } from "vue-router";
-import { ref } from "vue";
+import { onMounted, ref, watch } from "vue";
+import axios from "axios";
 
 const router = useRouter();
 const isLoggedin = ref(localStorage.getItem("token")?.length ?? false);
+const has_notification = ref(false);
+const notification_icon = ref(false);
+const notification_message = ref("");
+const notification_sender = ref("");
 
 const logout = async () => {
   const status = await axios.delete("/api/logout");
@@ -57,4 +83,38 @@ const logout = async () => {
     isLoggedin.value = false;
   }
 };
+
+onMounted(async () => {
+  window.Echo.channel("everyone").listen("\\App\\Events\\SendMessage", (e) => {
+    console.log(e);
+  });
+
+  const status = await axios.get("/api/user");
+
+  window.Echo.private(`App.Models.User.${status.data?.id ?? false}`).notification(
+    (notification) => {
+      // Checking if notification is about MESSAGE OF USER FROM CHAT
+      if (notification.type === "broadcast.message") {
+        notification_sender.value = notification.extras?.sender_name;
+      }
+
+      // Making notification toast visible with content
+      has_notification.value = true;
+      notification_icon.value = true;
+      notification_message.value = `${notification.message.substr(0, 80)}${
+        notification.message.length > 80 ? "..." : ""
+      }`;
+    }
+  );
+});
+
+// Watcher to hide the notification after exactly 5 seconds
+watch(has_notification, function (newValue) {
+  if (!newValue) return;
+  setTimeout(() => {
+    has_notification.value = false;
+    notification_sender.value = "";
+    notification_message.value = "";
+  }, 5000);
+});
 </script>
