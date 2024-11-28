@@ -17,7 +17,7 @@ class UserController extends Controller
         $token = $request->bearerToken();
         $data = Cache::remember($token, now()->addHour(), function() use ($token) {
             $token = PersonalAccessToken::findToken($token);
-            return $token->tokenable()->select(columns: ["id", "name", "email", "date_of_birth", "profile_pic"])->first();
+            return $token?->tokenable()?->with("chat_rooms")?->select(columns: ["id", "name", "email", "date_of_birth", "profile_pic"])->first() ?? [];
         });
         return $data;
 

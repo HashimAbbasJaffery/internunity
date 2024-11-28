@@ -31,7 +31,7 @@ class UserNotification extends Notification implements ShouldBroadcast, ShouldQu
      */
     public function via(object $notifiable): array
     {
-        return ["broadcast"];
+        return ["broadcast", "database"];
     }
 
     /**

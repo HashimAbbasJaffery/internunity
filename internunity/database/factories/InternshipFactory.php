@@ -20,7 +20,8 @@ class InternshipFactory extends Factory
             "title" => fake()->jobTitle(),
             "description" => fake()->paragraph(),
             "stipend" => fake()->numberBetween(15000, 20000),
-            "status" => fake()->numberBetween(0, 1)
+            "status" => fake()->numberBetween(0, 1),
+            "company_id" => fake()->numberBetween(1, 50)
         ];
     }
 }

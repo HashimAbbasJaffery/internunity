@@ -24,7 +24,11 @@ class NotificationController extends Controller
         if($this->sender) {
             $extras["sender_name"] = $this->sender->name;
         }
+        $extras["type"] = request()->type;
 
         $receiver->notify(new UserNotification(request()->message, request()->type, $extras));
+    }
+    public function get() {
+        return $this->sender?->notifications->select(["id", "data", "notifiable_id"]) ?? [];
     }
 }

@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('internships', function (Blueprint $table) {
+        Schema::create('chat_rooms', function (Blueprint $table) {
             $table->id();
-            $table->string("title");
-            $table->text("description");
-            $table->integer("stipend")->default(0);
-            $table->boolean("status");
+            $table->foreignId("company_id")->constrained()->cascadeOnDelete();
+            $table->foreignId("user_id")->constrained()->cascadeOnDelete();
+            $table->json("chats");
+            $table->boolean("status")->default(true);
             $table->timestamps();
         });
     }
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('internship');
+        Schema::dropIfExists('chats');
     }
 };

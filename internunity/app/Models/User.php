@@ -37,6 +37,7 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+
     /**
      * Get the attributes that should be cast.
      *
@@ -74,5 +75,8 @@ class User extends Authenticatable
     }}
     public function isOwnerOf(Model $model) {
         return $model->user_id === ($this->getUser())->id;
+    }
+    public function chat_rooms() {
+        return $this->hasMany(ChatRoom::class, "user_id");
     }
 }

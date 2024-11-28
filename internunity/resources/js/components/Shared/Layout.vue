@@ -1,7 +1,7 @@
 <template>
   <div
     v-if="has_notification"
-    class="notification bg-white fixed bottom-0 right-0 border border-black p-3 m-3 rounded z-10 animate__animated"
+    class="notification bg-white fixed bottom-10 right-0 border border-black p-3 m-3 rounded z-10 animate__animated"
     :class="{
       animate__backInRight: has_notification,
     }"
@@ -59,14 +59,36 @@
       </nav>
     </div>
   </header>
+  <div class="fixed bottom-0 right-0 z-20 w-full flex flex-row-reverse gap-2 items-end">
+    <chat-box
+      :rooms="chat_rooms"
+      :message_notifications="message_notifications"
+    ></chat-box>
+    <chat-instance
+      v-for="(chat, index) in chats.slice(0, 3)"
+      @deleteChat="deleteChat"
+      :chat="chat"
+      :key="index"
+    ></chat-instance>
+    <hidden-chats :chats="chats.slice(3)" v-if="chats.length > 3"></hidden-chats>
+  </div>
   <slot></slot>
+  <div class="loading-container h-screen">
+    <div class="loading container mx-auto w-2/3 h-full flex justify-center items-center">
+      <Loader :is_loading="true" class="loader"></Loader>
+    </div>
+  </div>
 </template>
 
 <script setup>
 import { RouterLink } from "vue-router";
 import { useRouter } from "vue-router";
-import { onMounted, ref, watch } from "vue";
+import { computed, onMounted, provide, ref, watch } from "vue";
 import axios from "axios";
+import Loader from "../Utils/Loader.vue";
+import ChatBox from "../Utils/ChatBox.vue";
+import ChatInstance from "../Utils/ChatInstance.vue";
+import HiddenChats from "../Utils/HiddenChats.vue";
 
 const router = useRouter();
 const isLoggedin = ref(localStorage.getItem("token")?.length ?? false);
@@ -74,6 +96,18 @@ const has_notification = ref(false);
 const notification_icon = ref(false);
 const notification_message = ref("");
 const notification_sender = ref("");
+const notificationsList = ref([]);
+const chat_rooms = ref([]);
+const chats = ref([]);
+provide("chats", chats);
+
+// const has_page_loaded = ref(false);
+
+const message_notifications = computed(() =>
+  notificationsList.value.filter(
+    (notification) => notification.data?.extras?.type === "message"
+  )
+);
 
 const logout = async () => {
   const status = await axios.delete("/api/logout");
@@ -90,12 +124,21 @@ onMounted(async () => {
   });
 
   const status = await axios.get("/api/user");
+  chat_rooms.value = status.data.chat_rooms;
+  const notifications = await axios.get("/api/notifications");
+  if (notifications.data?.length) {
+    notification_icon.value = true;
+    notificationsList.value = notifications.data;
+  }
 
   window.Echo.private(`App.Models.User.${status.data?.id ?? false}`).notification(
     (notification) => {
       // Checking if notification is about MESSAGE OF USER FROM CHAT
       if (notification.type === "broadcast.message") {
         notification_sender.value = notification.extras?.sender_name;
+
+        // Adding proxy data to show the number in realtime
+        notificationsList.value.push({ data: { extras: { type: "message" } } });
       }
 
       // Making notification toast visible with content
@@ -104,8 +147,11 @@ onMounted(async () => {
       notification_message.value = `${notification.message.substr(0, 80)}${
         notification.message.length > 80 ? "..." : ""
       }`;
+
+      notificationsList.value.push(notification);
     }
   );
+  //   has_page_loaded.value = true;
 });
 
 // Watcher to hide the notification after exactly 5 seconds
@@ -117,4 +163,8 @@ watch(has_notification, function (newValue) {
     notification_message.value = "";
   }, 5000);
 });
+
+const deleteChat = (id) => {
+  chats.value = chats.value.filter((chat) => chat.id !== id);
+};
 </script>

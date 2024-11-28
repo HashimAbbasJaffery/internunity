@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Application;
+use App\Models\Company;
 use App\Models\Education;
 use App\Models\Experience;
 use App\Models\Internship;
@@ -24,6 +25,7 @@ class DatabaseSeeder extends Seeder
         User::factory(50)->create();
 
         Experience::factory(50)->create();
+        Company::factory(50)->create();
         Internship::factory(50)->create();
         Tag::factory(50)->create();
         Education::factory(50)->create();
