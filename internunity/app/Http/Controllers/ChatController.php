@@ -5,28 +5,45 @@ namespace App\Http\Controllers;
 use App\Events\SendMessage;
 use App\Http\Requests\ChatRequest;
 use App\Models\ChatRoom;
+use App\Models\Company;
 use App\Models\User;
 use App\Notifications\UserNotification;
 use App\PayloadGenerator;
+use App\Services\Communication;
 use Illuminate\Http\Request;
 
 class ChatController extends Controller
 {
-    protected $sender;
-    public function __construct(User $user) {
-        $this->sender = $user->getUser();
-    }
+    public function __construct(
+        protected PayloadGenerator $payload,
+        protected Communication $communication
+    ) {}
     public function get() {
         SendMessage::dispatch(1, 1, "ll");
     }
-    public function store(ChatRequest $request, int $room, PayloadGenerator $payload) {
-        $chat_room = ChatRoom::find($room);
-        $receiver = User::find( $request->sender === 'user' ? $chat_room->company_id : $chat_room->user_id);
+    public function store(ChatRequest $request) {
+        $type = $request->sender;
 
-        $extras = $payload->generateForChat($request);
+        // Finding the room (if exists otherwise creating new room)
+        $condition = [
+            "company_id" => $request->company_id,
+            "user_id" => $request->user_id
+        ];
+
+        $chat_room = ChatRoom::firstOrCreate([
+            ...$condition
+        ], [
+            "chats" => "[]",
+            "status" => 1,
+            "is_read" => 0
+        ]);
+
+        // Determining who is the receiever on the other end
+        [ $sender, $receiver ] = $this->communication->between($request->user_id, $request->company_id, $type);
+        $extras = $this->payload->generateForChat($request, $chat_room);
 
         $chat_room->update([
-            "chats" => [...$chat_room->chats, ["message" => request()->message, "from" => $request->sender === 'user' ? 'company' : 'user']],
+            "chats" => [...$chat_room->chats, ["message" => request()->message, "from" => $type]],
             "is_read" => false
         ]);
 

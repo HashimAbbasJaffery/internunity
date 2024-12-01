@@ -80,7 +80,6 @@ import { RouterLink } from "vue-router";
 import { useRouter } from "vue-router";
 import { computed, onMounted, provide, ref, watch } from "vue";
 import axios from "axios";
-import Loader from "../Utils/Loader.vue";
 import ChatBox from "../Utils/ChatBox.vue";
 import ChatInstance from "../Utils/ChatInstance.vue";
 import HiddenChats from "../Utils/HiddenChats.vue";
@@ -113,6 +112,12 @@ const logout = async () => {
   }
 };
 
+const add_new_chat = (notification) => {
+  notification.extras.room.chats = JSON.parse(notification.extras.room.chats);
+  chat_rooms.value.push(notification.extras.room);
+  index = chat_rooms.value.length - 1;
+};
+
 const show_chat = (notification) => {
   let index = chat_rooms.value.findIndex((chat_room) => {
     return (
@@ -120,6 +125,11 @@ const show_chat = (notification) => {
       parseInt(chat_room.user_id) === parseInt(notification?.extras?.user_id)
     );
   });
+
+  // This check indicates that the company is messaging first time
+  if (index < 0) {
+    add_new_chat(notification);
+  }
 
   chat_rooms.value[index].chats.push({
     message: notification.message,
@@ -156,9 +166,6 @@ onMounted(async () => {
       // Making notification toast visible with content
       has_notification.value = true;
       notification_icon.value = true;
-      notification_message.value = `${notification.message.substr(0, 80)}${
-        notification.message.length > 80 ? "..." : ""
-      }`;
 
       notificationsList.value.push(notification);
     }

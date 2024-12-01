@@ -5,10 +5,7 @@
       style="height: 20px"
       @click="is_opened = !is_opened"
     >
-      <!-- <div class="new-message-marker bg-red-500" style="width: 10px; height: 10px">
-        &nbsp;
-      </div> -->
-      <p class="text-sm">{{ chat.company.company }}</p>
+      <p class="text-sm">{{ chat.company.name }}</p>
       <i
         class="fa-solid fa-xmark cursor-pointer"
         @click="$emit('deleteChat', chat.id)"

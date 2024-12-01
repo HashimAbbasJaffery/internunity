@@ -5,7 +5,7 @@
     </div>
     <div class="contact-body">
       <p class="text-sm mt-1" :class="{ 'font-bold': !is_read }">
-        {{ room.company.company.substr(0, 20) }}
+        {{ room.company.name.substr(0, 20) }}
       </p>
       <p class="text-xs text-gray-600 italic mt-1" :class="{ 'font-bold': !is_read }">
         {{

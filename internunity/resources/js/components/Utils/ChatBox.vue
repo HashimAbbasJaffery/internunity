@@ -2,7 +2,7 @@
   <div class="hover:bg-gray-200 cursor-pointer chat rounded z-10 w-1/5">
     <div
       class="chat-header bg-white flex items-center gap-2 border border-black py-2"
-      @click="is_clicked = !is_clicked"
+      @click="showChats"
     >
       <p class="pl-2">Messages</p>
       <div
@@ -36,6 +36,8 @@ const props = defineProps({
   rooms: Object,
 });
 
+const message_notifications = ref(props.message_notifications);
+
 onMounted(() => {
   console.log(props.rooms);
   console.log("lo");
@@ -46,5 +48,9 @@ let chats = inject("chats");
 const addChat = (room) => {
   if (chats.value.filter((chat) => chat.id === room.id).length) return;
   chats.value.push(room);
+};
+
+const showChats = () => {
+  is_clicked.value = !is_clicked.value;
 };
 </script>

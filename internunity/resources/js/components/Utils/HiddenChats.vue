@@ -8,7 +8,7 @@
           @click="show_room(chat.id, index)"
           class="text-xs mt-2 hover:bg-gray-300 w-full p-1 px-3 cursor-pointer"
         >
-          {{ chat.company.company }}
+          {{ chat.company.name }}
         </li>
       </ul>
     </div>
