@@ -65,19 +65,14 @@
       :message_notifications="message_notifications"
     ></chat-box>
     <chat-instance
-      v-for="(chat, index) in chats.slice(0, 3)"
+      v-for="chat in chats.slice(0, 3)"
       @deleteChat="deleteChat"
       :chat="chat"
-      :key="index"
+      :key="chat.id"
     ></chat-instance>
     <hidden-chats :chats="chats.slice(3)" v-if="chats.length > 3"></hidden-chats>
   </div>
   <slot></slot>
-  <div class="loading-container h-screen">
-    <div class="loading container mx-auto w-2/3 h-full flex justify-center items-center">
-      <Loader :is_loading="true" class="loader"></Loader>
-    </div>
-  </div>
 </template>
 
 <script setup>
@@ -118,11 +113,25 @@ const logout = async () => {
   }
 };
 
-onMounted(async () => {
-  window.Echo.channel("everyone").listen("\\App\\Events\\SendMessage", (e) => {
-    console.log(e);
+const show_chat = (notification) => {
+  let index = chat_rooms.value.findIndex((chat_room) => {
+    return (
+      parseInt(chat_room.company_id) === parseInt(notification?.extras?.company_id) &&
+      parseInt(chat_room.user_id) === parseInt(notification?.extras?.user_id)
+    );
   });
 
+  chat_rooms.value[index].chats.push({
+    message: notification.message,
+    from: "company",
+  });
+  chat_rooms.value[index].is_read = false;
+
+  !chats.value.filter((chat) => chat.id === chat_rooms.value[index].id).length &&
+    chats.value.push(chat_rooms.value[index]);
+};
+
+onMounted(async () => {
   const status = await axios.get("/api/user");
   chat_rooms.value = status.data.chat_rooms;
   const notifications = await axios.get("/api/notifications");
@@ -131,6 +140,7 @@ onMounted(async () => {
     notificationsList.value = notifications.data;
   }
 
+  // Realtime notifications
   window.Echo.private(`App.Models.User.${status.data?.id ?? false}`).notification(
     (notification) => {
       // Checking if notification is about MESSAGE OF USER FROM CHAT
@@ -139,6 +149,8 @@ onMounted(async () => {
 
         // Adding proxy data to show the number in realtime
         notificationsList.value.push({ data: { extras: { type: "message" } } });
+
+        show_chat(notification);
       }
 
       // Making notification toast visible with content

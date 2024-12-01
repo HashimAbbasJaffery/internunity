@@ -21,6 +21,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::get("/send_message", [ChatController::class, "get"])->middleware("auth:api");
 Route::post("/notification/{user}", [NotificationController::class, "notify"]);
+Route::post("/send/{room}", [ChatController::class, "store"]);
+Route::patch("/message/{room}/changeStatus", [ChatController::class, "changeStatus"]);
 Route::get("/notifications", [NotificationController::class, "get"]);
 
 Route::get("/user", [UserController::class, "get"]);

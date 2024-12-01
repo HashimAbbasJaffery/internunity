@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class ChatRoom extends Model
 {
+    protected $guarded = ["id", "created_at", "updated_at"];
     protected $table = "chat_rooms";
     protected $with = [ "user", "company" ];
     public function user() {
@@ -17,8 +18,8 @@ class ChatRoom extends Model
     }
     protected function chats(): Attribute {
         return Attribute::make(
-            get: fn(string $value) => array_reverse((array)json_decode($value)),
-            set: fn(string $value) => json_encode($value)
+            get: fn(string $value) => json_decode($value),
+            // set: fn(string $value) => json_encode($value)
         );
     }
 }

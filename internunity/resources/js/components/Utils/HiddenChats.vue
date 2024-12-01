@@ -1,5 +1,5 @@
 <template>
-  <div class="chat-list-container">
+  <div class="chat-list-container relative">
     <div v-if="is_expanded" class="bg-white shade mb-2">
       <ul>
         <li
@@ -34,6 +34,8 @@ const chat_rooms = inject("chats");
 
 const show_room = (id, index) => {
   let to_hide_index = chat_rooms.value.findIndex((chat_room) => chat_room.id === id);
+
+  // Swapping rooms via destructuring
   [chat_rooms.value[to_hide_index], chat_rooms.value[2]] = [
     chat_rooms.value[2],
     chat_rooms.value[to_hide_index],

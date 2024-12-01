@@ -15,11 +15,8 @@ class UserController extends Controller
 
         // Each Token represents the Logged in each device
         $token = $request->bearerToken();
-        $data = Cache::remember($token, now()->addHour(), function() use ($token) {
-            $token = PersonalAccessToken::findToken($token);
-            return $token?->tokenable()?->with("chat_rooms")?->select(columns: ["id", "name", "email", "date_of_birth", "profile_pic"])->first() ?? [];
-        });
-        return $data;
+        $token = PersonalAccessToken::findToken($token);
+        return $token?->tokenable()?->with("chat_rooms")?->select(columns: ["id", "name", "email", "date_of_birth", "profile_pic"])->first() ?? [];
 
     }
     public function edit(UserEditRequest $request) {
@@ -36,7 +33,6 @@ class UserController extends Controller
             Storage::disk("public")->putFileAs("/profile", $profile_pic, $filename);
         }
 
-        cache()->forget($request->bearerToken());
         $token = PersonalAccessToken::find($request->bearerToken());
 
         if($request->hasFile("profile_pic") && $token->tokenable->profile_pic) {
