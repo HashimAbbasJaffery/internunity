@@ -5,13 +5,6 @@
       @click="showChats"
     >
       <p class="pl-2">Messages</p>
-      <div
-        class="quantity bg-red-500 text-white rounded-full text-xs flex justify-center items-center"
-        style="width: 15px; height: 15px"
-        v-if="message_notifications.length"
-      >
-        {{ message_notifications.length }}
-      </div>
     </div>
 
     <div
@@ -19,14 +12,19 @@
       class="chat-contents shade bg-white"
       style="height: 300px; overflow: auto"
     >
-      <div class="contacts" v-for="room in rooms" @click="addChat(room)" :key="room.id">
+      <div
+        class="contacts"
+        v-for="room in rooms.sort(sorting_criteria)"
+        @click="addChat(room)"
+        :key="room.id"
+      >
         <Room :room="room"></Room>
       </div>
     </div>
   </div>
 </template>
 <script setup>
-import { onMounted, ref, inject, computed } from "vue";
+import { onMounted, ref, inject } from "vue";
 import Room from "./Room.vue";
 
 const is_clicked = ref(false);
@@ -36,12 +34,14 @@ const props = defineProps({
   rooms: Object,
 });
 
-const message_notifications = ref(props.message_notifications);
-
-onMounted(() => {
-  console.log(props.rooms);
-  console.log("lo");
-});
+const sorting_criteria = (a, b) => {
+  if (!a.is_read && b.is_read) {
+    return -1;
+  }
+  if (!b.is_read && a.is_read) {
+    return 1;
+  }
+};
 
 let chats = inject("chats");
 

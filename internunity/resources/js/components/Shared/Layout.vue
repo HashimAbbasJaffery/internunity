@@ -45,7 +45,10 @@
           <li v-else class="hover:bg-shade hover:text-black px-3 py-1 rounded">
             <RouterLink to="/login">Login</RouterLink>
           </li>
-          <li class="hover:bg-shade hover:text-black px-3 py-1 rounded relative">
+          <li
+            class="hover:bg-shade hover:text-black px-3 py-1 rounded relative w-full"
+            @click="show_all_notifications = !show_all_notifications"
+          >
             <div
               v-if="notification_icon"
               class="has-notifications bg-base-alt rounded-full absolute right-2 top-1 animate__animated"
@@ -54,6 +57,23 @@
               &nbsp;
             </div>
             <i class="fa-solid fa-bell animate__animated"></i>
+            <div
+              v-if="show_all_notifications"
+              class="notification-list absolute bg-white text-black rounded z-20 shade mt-4"
+              style="width: 300px; max-height: 300px; overflow: auto; right: 0px"
+            >
+              <ul
+                class="space-y-3 w-full"
+                v-for="notification in notificationsList"
+                :key="notification.id"
+                @click="console.log(notification)"
+              >
+                <message-notification
+                  @click="show_chat(notification, false)"
+                  :notification="notification"
+                ></message-notification>
+              </ul>
+            </div>
           </li>
         </ul>
       </nav>
@@ -83,6 +103,7 @@ import axios from "axios";
 import ChatBox from "../Utils/ChatBox.vue";
 import ChatInstance from "../Utils/ChatInstance.vue";
 import HiddenChats from "../Utils/HiddenChats.vue";
+import MessageNotification from "../Utils/MessageNotification.vue";
 
 const router = useRouter();
 const isLoggedin = ref(localStorage.getItem("token")?.length ?? false);
@@ -91,6 +112,7 @@ const notification_icon = ref(false);
 const notification_message = ref("");
 const notification_sender = ref("");
 const notificationsList = ref([]);
+const show_all_notifications = ref(false);
 const chat_rooms = ref([]);
 const chats = ref([]);
 provide("chats", chats);
@@ -112,29 +134,34 @@ const logout = async () => {
   }
 };
 
-const add_new_chat = (notification) => {
+const add_new_chat = (notification, index) => {
   notification.extras.room.chats = JSON.parse(notification.extras.room.chats);
   chat_rooms.value.push(notification.extras.room);
   index = chat_rooms.value.length - 1;
+  return index;
 };
 
-const show_chat = (notification) => {
+const show_chat = (notification, append_message = true) => {
   let index = chat_rooms.value.findIndex((chat_room) => {
     return (
-      parseInt(chat_room.company_id) === parseInt(notification?.extras?.company_id) &&
-      parseInt(chat_room.user_id) === parseInt(notification?.extras?.user_id)
+      parseInt(chat_room.company_id) ===
+        parseInt(
+          notification?.extras?.company_id ?? notification?.data?.extras?.company_id
+        ) &&
+      parseInt(chat_room.user_id) ===
+        parseInt(notification?.extras?.user_id ?? notification?.data?.extras?.user_id)
     );
   });
-
   // This check indicates that the company is messaging first time
   if (index < 0) {
-    add_new_chat(notification);
+    index = add_new_chat(notification, index);
   }
 
-  chat_rooms.value[index].chats.push({
-    message: notification.message,
-    from: "company",
-  });
+  append_message &&
+    chat_rooms.value[index].chats.push({
+      message: notification.message,
+      from: "company",
+    });
   chat_rooms.value[index].is_read = false;
 
   !chats.value.filter((chat) => chat.id === chat_rooms.value[index].id).length &&
@@ -167,6 +194,8 @@ onMounted(async () => {
       has_notification.value = true;
       notification_icon.value = true;
 
+      console.log("Notification");
+      console.log(notification);
       notificationsList.value.push(notification);
     }
   );
