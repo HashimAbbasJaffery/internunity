@@ -69,10 +69,14 @@ class User extends Authenticatable
     public function reports() {
         return $this->hasMany(Report::class);
     }
-    public function getUser() {{
+    public function getUser() {
         $token = PersonalAccessToken::findToken(request()->bearerToken());
         return $token?->tokenable ?? null;
-    }}
+    }
+    public function getUserCallable() {
+        $token = PersonalAccessToken::findToken(request()->bearerToken());
+        return $token?->tokenable() ?? null;
+    }
     public function isOwnerOf(Model $model) {
         return $model->user_id === ($this->getUser())->id;
     }

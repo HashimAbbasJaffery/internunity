@@ -1,7 +1,7 @@
 <template>
   <li
     class="text-xs hover:bg-gray-200 p-2 cursor-pointer"
-    @click="console.log(notification)"
+    @click="readNotification"
     v-if="
       notification.id &&
       ((notification.data?.extras?.type ?? notification.type) === 'broadcast.message' ||
@@ -22,4 +22,13 @@
 const props = defineProps({
   notification: Object,
 });
+
+const emits = defineEmits(["read"]);
+
+const readNotification = async () => {
+  const status = await axios.post(`/api/notification/${props.notification.id}/read`, {
+    _method: "PUT",
+  });
+  emits("read", props.notification.id);
+};
 </script>

@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('password');
             $table->string("profile_pic")->nullable();
             $table->date("date_of_birth");
+            $table->boolean("has_notifications")->default(false);
             $table->rememberToken();
             $table->timestamps();
 

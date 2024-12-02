@@ -47,6 +47,11 @@ class ChatController extends Controller
             "is_read" => false
         ]);
 
+        if(!$receiver->has_notifications) {
+            $receiver->has_notifications = true;
+            $receiver->save();
+        }
+
 
         // Send Realtime notification
         $receiver->notify(new UserNotification(request()->message, request()->type, $extras));

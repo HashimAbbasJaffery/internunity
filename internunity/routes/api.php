@@ -9,12 +9,14 @@ use App\Http\Controllers\EducationController;
 use App\Http\Controllers\ExperienceController;
 use App\Http\Controllers\HeartActionController;
 use App\Http\Controllers\InternshipController;
+use App\Http\Controllers\MarkAsReadController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PortfolioController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ReportTypeController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Middleware\IsLoggedin;
+use App\Models\Notification;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -22,6 +24,13 @@ use Illuminate\Support\Facades\Route;
 Route::get("/send_message", [ChatController::class, "get"])->middleware("auth:api");
 // Route::post("/notification/{user}", [NotificationController::class, "notify"]);
 Route::post("/send", [ChatController::class, "store"]);
+Route::put("/notifications/user", [MarkAsReadController::class, "edit"]);
+
+Route::put("/notification/{notification}/read", function(Notification $notification) {
+    $notification->read_at = now();
+    $notification->save();
+    return 1;
+});
 Route::patch("/message/{room}/changeStatus", [ChatController::class, "changeStatus"]);
 Route::get("/notifications", [NotificationController::class, "get"]);
 

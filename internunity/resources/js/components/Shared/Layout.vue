@@ -1,15 +1,4 @@
 <template>
-  <div
-    v-if="has_notification"
-    class="notification bg-white fixed bottom-10 right-0 border border-black p-3 m-3 rounded z-10 animate__animated"
-    :class="{
-      animate__backInRight: has_notification,
-    }"
-    style="width: 300px"
-  >
-    <h1 class="font-bold">Message</h1>
-    <p>{{ notification_sender }}: {{ notification_message }}</p>
-  </div>
   <header class="bg-base text-white py-4">
     <div class="container mx-auto w-2/3 flex justify-between items-center">
       <div class="logo">
@@ -47,10 +36,10 @@
           </li>
           <li
             class="hover:bg-shade hover:text-black px-3 py-1 rounded relative w-full"
-            @click="show_all_notifications = !show_all_notifications"
+            @click="readNotification"
           >
             <div
-              v-if="notification_icon"
+              v-if="has_notification"
               class="has-notifications bg-base-alt rounded-full absolute right-2 top-1 animate__animated"
               style="width: 10px; height: 10px"
             >
@@ -70,6 +59,7 @@
               >
                 <message-notification
                   @click="show_chat(notification, false)"
+                  @read="console.log($event)"
                   :notification="notification"
                 ></message-notification>
               </ul>
@@ -116,6 +106,13 @@ const show_all_notifications = ref(false);
 const chat_rooms = ref([]);
 const chats = ref([]);
 provide("chats", chats);
+
+const readNotification = async () => {
+  show_all_notifications.value = !show_all_notifications.value;
+  has_notification.value = false;
+  const status = await axios.post("/api/notifications/user", { _method: "PUT" });
+  console.log(status.data);
+};
 
 // const has_page_loaded = ref(false);
 
@@ -170,6 +167,7 @@ const show_chat = (notification, append_message = true) => {
 
 onMounted(async () => {
   const status = await axios.get("/api/user");
+  has_notification.value = status.data.has_notifications;
   chat_rooms.value = status.data.chat_rooms;
   const notifications = await axios.get("/api/notifications");
   if (notifications.data?.length) {
@@ -191,8 +189,8 @@ onMounted(async () => {
       }
 
       // Making notification toast visible with content
-      has_notification.value = true;
       notification_icon.value = true;
+      has_notification.value = true;
 
       console.log("Notification");
       console.log(notification);
@@ -203,14 +201,6 @@ onMounted(async () => {
 });
 
 // Watcher to hide the notification after exactly 5 seconds
-watch(has_notification, function (newValue) {
-  if (!newValue) return;
-  setTimeout(() => {
-    has_notification.value = false;
-    notification_sender.value = "";
-    notification_message.value = "";
-  }, 5000);
-});
 
 const deleteChat = (id) => {
   chats.value = chats.value.filter((chat) => chat.id !== id);

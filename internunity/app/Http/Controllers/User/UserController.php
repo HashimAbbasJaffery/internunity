@@ -16,7 +16,7 @@ class UserController extends Controller
         // Each Token represents the Logged in each device
         $token = $request->bearerToken();
         $token = PersonalAccessToken::findToken($token);
-        return $token?->tokenable()?->with("chat_rooms")?->select(columns: ["id", "name", "email", "date_of_birth", "profile_pic"])->first() ?? [];
+        return $token?->tokenable()?->with("chat_rooms")?->select(columns: ["id", "name", "email", "date_of_birth", "profile_pic", "has_notifications"])->first() ?? [];
 
     }
     public function edit(UserEditRequest $request) {
