@@ -15,6 +15,7 @@ use App\Http\Controllers\PortfolioController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ReportTypeController;
 use App\Http\Controllers\User\UserController;
+use App\Http\Middleware\HasToken;
 use App\Http\Middleware\IsLoggedin;
 use App\Models\Notification;
 use App\Models\User;
@@ -60,8 +61,9 @@ Route::post("/user/{internship}/report", [ReportController::class, "store"]);
 Route::get("/report_types", [ReportTypeController::class, "get"]);;
 
 Route::post("login", [AuthenticationController::class, "login"])->name("login")
-        ->middleware(IsLoggedin::class);
+        ->withoutMiddleware(HasToken::class);
 Route::delete("logout", [AuthenticationController::class, "logout"])->name("logout");
 
 
-Route::get("/internships", [InternshipController::class, "index"]);
+Route::get("/internships", [InternshipController::class, "index"])
+        ->withoutMiddleware(HasToken::class);

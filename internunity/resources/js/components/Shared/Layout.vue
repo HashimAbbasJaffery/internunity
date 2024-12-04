@@ -88,24 +88,33 @@
 <script setup>
 import { RouterLink } from "vue-router";
 import { useRouter } from "vue-router";
-import { computed, onMounted, provide, ref, watch } from "vue";
+import { computed, onMounted, onUnmounted, provide, ref, watch } from "vue";
 import axios from "axios";
 import ChatBox from "../Utils/ChatBox.vue";
 import ChatInstance from "../Utils/ChatInstance.vue";
 import HiddenChats from "../Utils/HiddenChats.vue";
 import MessageNotification from "../Utils/MessageNotification.vue";
+import Notifications from "../../Classes/Notifications";
 
 const router = useRouter();
 const isLoggedin = ref(localStorage.getItem("token")?.length ?? false);
 const has_notification = ref(false);
 const notification_icon = ref(false);
-const notification_message = ref("");
 const notification_sender = ref("");
 const notificationsList = ref([]);
 const show_all_notifications = ref(false);
 const chat_rooms = ref([]);
 const chats = ref([]);
 provide("chats", chats);
+const notifications = new Notifications();
+
+const removeAllUserItems = () => {
+  has_notification.value = false;
+  notificationsList.value = [];
+  show_all_notifications.value = false;
+  chat_rooms.value = [];
+  chats.value = [];
+};
 
 const readNotification = async () => {
   show_all_notifications.value = !show_all_notifications.value;
@@ -123,11 +132,21 @@ const message_notifications = computed(() =>
 );
 
 const logout = async () => {
+  let config = {
+    headers: {
+      Authorization: "Bearer " + localStorage.token,
+    },
+  };
+  const user = await axios.get("/api/user", config);
+
+  unsubscribeToChannel(`App.Models.User.${user.data?.id ?? false}`, true);
   const status = await axios.delete("/api/logout");
   if (status.data) {
     localStorage.removeItem("token");
     router.push("/");
     isLoggedin.value = false;
+
+    removeAllUserItems();
   }
 };
 
@@ -165,8 +184,41 @@ const show_chat = (notification, append_message = true) => {
     chats.value.push(chat_rooms.value[index]);
 };
 
+const subscribeToChannel = (channel) => {
+  //   notifications.subscribeToPrivate(channel, function (notification) {});
+  window.Echo.private(channel).notification((notification) => {
+    // Checking if notification is about MESSAGE OF USER FROM CHAT
+    if (notification.type === "broadcast.message") {
+      notification_sender.value = notification.extras?.sender_name;
+
+      // Adding proxy data to show the number in realtime
+      notificationsList.value.push({ data: { extras: { type: "message" } } });
+
+      show_chat(notification);
+    }
+
+    // Making notification toast visible with content
+    notification_icon.value = true;
+    has_notification.value = true;
+
+    console.log("Notification");
+    console.log(notification);
+    notificationsList.value.push(notification);
+  });
+};
+
+const unsubscribeToChannel = (channel, is_private) => {
+  channel = `${is_private ? "private-" : ""}${channel}`;
+  window.Echo.leaveChannel(channel);
+};
+
 onMounted(async () => {
-  const status = await axios.get("/api/user");
+  let config = {
+    headers: {
+      Authorization: "Bearer " + localStorage.token,
+    },
+  };
+  const status = await axios.get("/api/user", config);
   has_notification.value = status.data.has_notifications;
   chat_rooms.value = status.data.chat_rooms;
   const notifications = await axios.get("/api/notifications");
@@ -174,29 +226,10 @@ onMounted(async () => {
     notification_icon.value = true;
     notificationsList.value = notifications.data;
   }
-
   // Realtime notifications
-  window.Echo.private(`App.Models.User.${status.data?.id ?? false}`).notification(
-    (notification) => {
-      // Checking if notification is about MESSAGE OF USER FROM CHAT
-      if (notification.type === "broadcast.message") {
-        notification_sender.value = notification.extras?.sender_name;
+  if (localStorage.token)
+    subscribeToChannel(`App.Models.User.${status.data?.id ?? false}`);
 
-        // Adding proxy data to show the number in realtime
-        notificationsList.value.push({ data: { extras: { type: "message" } } });
-
-        show_chat(notification);
-      }
-
-      // Making notification toast visible with content
-      notification_icon.value = true;
-      has_notification.value = true;
-
-      console.log("Notification");
-      console.log(notification);
-      notificationsList.value.push(notification);
-    }
-  );
   //   has_page_loaded.value = true;
 });
 

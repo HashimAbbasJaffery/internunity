@@ -1,48 +1,50 @@
 <template>
   <Layout>
-    <div class="container mx-auto w-2/3 mt-4">
-      <div
-        class="invalid-credentials bg-red-400 text-white rounded p-2 mb-3"
-        v-if="invalidCredentials"
-      >
-        Invalid Credentials!
-      </div>
-      <form @submit="login">
-        <label for="email" class="mt-4">
-          <h1 class="font-bold">Email</h1>
-          <p class="mt-3 text-xs text-red-500 mb-1" v-if="errors.email.length">
-            {{ errors.email[0] }}
-          </p>
-          <input
-            type="email"
-            v-model="form.email"
-            class="shade w-full outline-none rounded-md px-3 py-2"
-            :class="{ 'border border-red-400': errors.email.length }"
-            placeholder="Email"
-          />
-        </label>
-        <label for="password">
-          <h1 class="font-bold mt-4">Password</h1>
-          <p class="mt-3 text-xs text-red-500 mb-1" v-if="errors.password.length">
-            {{ errors.password[0] }}
-          </p>
-          <input
-            type="password"
-            v-model="form.password"
-            class="shade w-full outline-none rounded-md px-3 py-2"
-            :class="{ 'border border-red-400': errors.password.length }"
-            placeholder="Password"
-          />
-        </label>
-        <button
-          type="submit"
-          :disabled="is_checking"
-          class="bg-base-alt disabled:bg-base-alt/50 disabled:cursor-not-allowed shade w-full outline-none rounded-md px-3 py-2 mt-3"
+    <div class="container mx-auto w-2/3 mt-4 items-center shade h-full">
+      <div class="login-container p-4 shade rounded-md w-full">
+        <div
+          class="invalid-credentials bg-red-400 text-white rounded p-2 mb-3"
+          v-if="invalidCredentials"
         >
-          <span v-if="!is_checking">Login</span>
-          <Loader v-else class="loader loader-short"></Loader>
-        </button>
-      </form>
+          Invalid Credentials!
+        </div>
+        <form @submit="login">
+          <label for="email" class="mt-4">
+            <h1 class="font-bold">Email</h1>
+            <p class="mt-3 text-xs text-red-500 mb-1" v-if="errors.email.length">
+              {{ errors.email[0] }}
+            </p>
+            <input
+              type="email"
+              v-model="form.email"
+              class="shade w-full outline-none rounded-md px-3 py-2"
+              :class="{ 'border border-red-400': errors.email.length }"
+              placeholder="Email"
+            />
+          </label>
+          <label for="password">
+            <h1 class="font-bold mt-4">Password</h1>
+            <p class="mt-3 text-xs text-red-500 mb-1" v-if="errors.password.length">
+              {{ errors.password[0] }}
+            </p>
+            <input
+              type="password"
+              v-model="form.password"
+              class="shade w-full outline-none rounded-md px-3 py-2"
+              :class="{ 'border border-red-400': errors.password.length }"
+              placeholder="Password"
+            />
+          </label>
+          <button
+            type="submit"
+            :disabled="is_checking"
+            class="bg-base-alt disabled:bg-base-alt/50 disabled:cursor-not-allowed shade w-full outline-none rounded-md px-3 py-2 mt-3"
+          >
+            <span v-if="!is_checking">Login</span>
+            <Loader v-else class="loader loader-short"></Loader>
+          </button>
+        </form>
+      </div>
     </div>
   </Layout>
 </template>
@@ -79,7 +81,7 @@ const login = async (e) => {
       invalidCredentials.value = false;
       localStorage.setItem("token", data.data.token);
       window.axios.defaults.headers.common[
-        "Authentication"
+        "Authorization"
       ] = `Bearer ${localStorage.getItem("token")}`;
       router.push("/");
     } else {

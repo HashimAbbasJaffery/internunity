@@ -112,9 +112,15 @@ const isFileUploading = ref(false);
 const url = ref(`/api/user/update`);
 const { isLoading, sendRequest, errors } = usePost(url);
 
+let config = {
+  headers: {
+    Authorization: "Bearer " + localStorage.token,
+  },
+};
+
 onMounted(async () => {
   isFetching.value = true;
-  const userData = await axios.get("/api/user");
+  const userData = await axios.get("/api/user", config);
   console.log(userData);
   user.name = userData.data.name;
   user.email = userData.data.email;
