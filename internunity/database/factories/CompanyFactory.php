@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use Hash;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -18,7 +19,9 @@ class CompanyFactory extends Factory
     {
         return [
             "name" => fake()->company,
-            "profile_pic" => null
+            "profile_pic" => null,
+            "email" => fake()->email,
+            "password" => Hash::make("password")
         ];
     }
 }

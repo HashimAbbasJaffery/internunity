@@ -18,6 +18,7 @@ class InternshipController extends Controller
                                     ->whereDoesntHave("reports", fn($query) => $query->where("user_id", $user_id))
                                     ->where("title", "LIKE", "%$keyword%")
                                     ->whereStatus(1)
+                                    ->latest()
                                     ->paginate(8)
                                     ->withQueryString();
         return $internships;

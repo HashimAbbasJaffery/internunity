@@ -106,7 +106,6 @@ const show_all_notifications = ref(false);
 const chat_rooms = ref([]);
 const chats = ref([]);
 provide("chats", chats);
-const notifications = new Notifications();
 
 const removeAllUserItems = () => {
   has_notification.value = false;
@@ -158,6 +157,9 @@ const add_new_chat = (notification, index) => {
 };
 
 const show_chat = (notification, append_message = true) => {
+  // Getting Index of the list of companies in the ChatBox
+  // if index >= 0 means company has already chatted before
+
   let index = chat_rooms.value.findIndex((chat_room) => {
     return (
       parseInt(chat_room.company_id) ===
@@ -168,6 +170,7 @@ const show_chat = (notification, append_message = true) => {
         parseInt(notification?.extras?.user_id ?? notification?.data?.extras?.user_id)
     );
   });
+
   // This check indicates that the company is messaging first time
   if (index < 0) {
     index = add_new_chat(notification, index);
@@ -185,7 +188,6 @@ const show_chat = (notification, append_message = true) => {
 };
 
 const subscribeToChannel = (channel) => {
-  //   notifications.subscribeToPrivate(channel, function (notification) {});
   window.Echo.private(channel).notification((notification) => {
     // Checking if notification is about MESSAGE OF USER FROM CHAT
     if (notification.type === "broadcast.message") {
@@ -213,12 +215,7 @@ const unsubscribeToChannel = (channel, is_private) => {
 };
 
 onMounted(async () => {
-  let config = {
-    headers: {
-      Authorization: "Bearer " + localStorage.token,
-    },
-  };
-  const status = await axios.get("/api/user", config);
+  const status = await axios.get("/api/user");
   has_notification.value = status.data.has_notifications;
   chat_rooms.value = status.data.chat_rooms;
   const notifications = await axios.get("/api/notifications");

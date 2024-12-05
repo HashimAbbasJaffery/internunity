@@ -40,7 +40,11 @@
         class="bg-base-alt px-2 py-1 text-white rounded-md"
         @click="heart"
       >
-        <i class="fa-solid fa-heart text-black" v-if="!is_hearted"></i>
+        <i
+          class="fa-solid fa-heart text-black like-button"
+          :class="{ active: is_hearted }"
+          v-if="is_hearted"
+        ></i>
         <i class="fa-regular fa-heart" v-else></i>
       </button>
       <button
@@ -58,7 +62,7 @@
         {{ internship.description.substring(0, 299) }}
         {{ internship.length > 300 ? "..." : "" }}
       </p>
-      <p class="text-xs mt-3">Stipend {{ internship.stipend.toLocaleString() }} PKR</p>
+      <p class="text-xs mt-3">Stipend {{ internship.stipend }} PKR</p>
       <div class="tags my-3 space-x-2">
         <span
           v-for="tag in internship.tags"

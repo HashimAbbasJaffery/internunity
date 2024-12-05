@@ -13,3 +13,15 @@ html, body {
     -ms-overflow-style: none; /* For Internet Explorer and Edge */
     scrollbar-width: none; /* For Firefox */
   }
+
+@keyframes like {
+    0%   { transform: scale(1); }
+    90%   { transform: scale(1.2); }
+    100% { transform: scale(1.1); }
+}
+
+.like-button.active {
+    animation: like 0.5s 1;
+}
+
+

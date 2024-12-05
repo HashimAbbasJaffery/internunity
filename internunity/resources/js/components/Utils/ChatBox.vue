@@ -14,7 +14,7 @@
     >
       <div
         class="contacts"
-        v-for="room in rooms.sort(sorting_criteria)"
+        v-for="room in rooms?.sort(sorting_criteria)"
         @click="addChat(room)"
         :key="room.id"
       >
