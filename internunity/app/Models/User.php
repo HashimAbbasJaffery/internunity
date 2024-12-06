@@ -83,4 +83,7 @@ class User extends Authenticatable
     public function chat_rooms() {
         return $this->hasMany(ChatRoom::class, "user_id");
     }
+    public function hires() {
+        return $this->hasMany(Hire::class);
+    }
 }

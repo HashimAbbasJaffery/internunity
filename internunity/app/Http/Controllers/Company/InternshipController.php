@@ -58,6 +58,7 @@ class InternshipController extends Controller
 
         $company = (PersonalAccessToken::findToken($request->bearerToken()))->tokenable;
 
+        if($internship->company_id !== $company->id) return [ "message" => 'Unauthorized', "status" => 403 ];
         DB::transaction(function() use($request, $company, $internship) {
             $internship->update([
                 "title" => $request->title,
