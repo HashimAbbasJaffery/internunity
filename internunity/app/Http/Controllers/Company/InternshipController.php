@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Company;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\InternshipCreateRequest;
 use App\Models\Internship;
 use DB;
 use Illuminate\Http\Request;
@@ -12,8 +13,14 @@ use Validator;
 class InternshipController extends Controller
 {
     public function get(Request $request) {
-        $company = (PersonalAccessToken::findToken($request->bearerToken()))->tokenable();
-        return $company->with(["internships" => fn($query) => $query->withCount("applications")])->get();
+        $keyword = $request->keyword;
+        $company = (PersonalAccessToken::findToken($request->bearerToken()))->tokenable;
+        return $company->internships()->select(["title", "description", "stipend", "status", "created_at"])
+                        ->latest()
+                        ->orderBy("created_at", "desc")
+                        ->withCount("applications")
+                        ->whereLike('title', "%$keyword%")
+                        ->paginate(8);
     }
     public function delete(Request $request, Internship $internship) {
         $company = (PersonalAccessToken::findToken($request->bearerToken()))->tokenable;
@@ -21,17 +28,18 @@ class InternshipController extends Controller
         $is_deleted = $internship->delete();
         return $is_deleted;
     }
-    public function store(Request $request) {
-        $request->validate([
-            "title" => ["required"],
-            "description" => ["required"],
-            "stipend" => ["required"],
-            "tags" => ["required"]
-        ]);
+    public function store(InternshipCreateRequest $request) {
 
         $company = (PersonalAccessToken::findToken($request->bearerToken()))->tokenable;
 
         DB::transaction(function() use($request, $company) {
+
+            // Deducting amount from the wallet
+            if($company->wallet->balance < 5) return;
+            $company->wallet->balance -= 5;
+            $company->wallet->save();
+
+            // Posting internship
             $internship = Internship::create([
                 "title" => $request->title,
                 "description" => $request->description,
@@ -40,8 +48,10 @@ class InternshipController extends Controller
                 "status" => 1
             ]);
 
+            // If there are no tags then rollback all previous transactions
             if(!json_decode($request->tags)) DB::rollBack();
 
+            // Attach tags
             $internship->tags()->sync(json_decode($request->tags));
         });
 

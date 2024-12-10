@@ -3,41 +3,45 @@
 namespace App\Listeners;
 
 use App\ApplicationTypes;
+use App\Events\Applied;
 use App\Events\Interview;
 use App\Events\Rejected;
-use App\Jobs\SendEmails;
 use App\Models\Application;
 use App\Models\User;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Mail;
-use Log;
 
 class ApplicationStatusChangeListener implements ShouldQueue
 {
     /**
      * Create the event listener.
      */
+    protected $type = [
+        "App\Events\Rejected" => ApplicationTypes::REJECTED->value,
+        "App\Events\Interview" => ApplicationTypes::INTERVIEW->value,
+        "App\Events\Applied" => ApplicationTypes::APPLIED->value
+    ];
     public function __construct()
     {
         //
     }
-
-
     /**P
      * Handle the event.
      */
-    public function handle(Rejected|Interview $event): void
+    public function handle(Rejected|Interview|Applied $event): void
     {
-        // Setting status to rejected to all rejected candidates
+        $status = $this->type[get_class($event)];
+
+        // Setting specified status to users
         Application::whereIn("id", $event->applications->pluck("id"))->update([
-            "status" => ApplicationTypes::REJECTED->value
+            "status" => $status
         ]);
         $emails = User::whereIn("id", $event->applications->pluck("user_id"))->get();
 
-        // Sending Rejection Emails to unselected candidates
+        // Sending specific mail to users
+        $mailer = "\App\Mail\\" . ucfirst($status);
         foreach($emails as $email) {
-            Mail::to($email)->send(new \App\Mail\Rejected());
+            Mail::to($email)->send(new $mailer());
         }
     }
 }

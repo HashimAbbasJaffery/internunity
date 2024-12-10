@@ -6,10 +6,10 @@
     class="relative internship bg-white mt-3 rounded-md p-2 hover:bg-grey cursor-pointer"
   >
     <Intership
-      @reported="reported"
       :is_applied="internship.applications?.length ?? false"
       :internship="internship"
       :is_loading="is_loading"
+      :viewFor="viewFor"
     ></Intership>
   </div>
   <div
@@ -44,6 +44,18 @@ const props = defineProps({
     type: String,
     optional: true,
   },
+  url: {
+    type: String,
+    default() {
+      return "/api/internships";
+    },
+  },
+  viewFor: {
+    type: String,
+    default() {
+      return "user";
+    },
+  },
 });
 
 const show_global_loading = ref(false);
@@ -52,7 +64,7 @@ const emits = defineEmits(["next"]);
 
 provide("report_types", internshipsData);
 
-const url = ref(`/api/internships`);
+const url = ref(props.url);
 const {
   internshipsData: internships,
   is_loading,
@@ -73,7 +85,7 @@ const reported = () => {
 const searchInternships = () => {
   internships.value = [];
   show_global_loading.value = true;
-  url.value = `/api/internships?keyword=${keyword.value}`;
+  url.value = `${props.url}?keyword=${keyword.value}`;
 };
 
 const keyword = inject("keyword");

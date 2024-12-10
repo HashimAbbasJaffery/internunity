@@ -11,14 +11,7 @@ export default function usePost(url) {
         let hasErrors = false;
         if(additionalLoader) additionalLoader.value = true;
 
-
-        let config = {
-            headers: {
-                'Authorization': 'Bearer ' + localStorage.token,
-                'Content-Type': 'multipart/form-data'
-            }
-        }
-        axios.post(toValue(url), data, config)
+        axios.post(toValue(url), data)
             .then(res => {
                 console.log(res);
                 returns.value = res

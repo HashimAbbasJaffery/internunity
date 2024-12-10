@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\ApplicationTypes;
 use App\Events\Hired;
+use App\Events\Interview;
 use App\Events\Rejected;
 use App\Models\Application;
 use App\Models\Internship;
@@ -47,10 +48,12 @@ class HiringController extends Controller
         $shortlisted_candidates = json_decode($request->candidates_id);
 
         $rejected_candidates = $internship->applications()->select("id", "user_id")->whereNotIn("user_id", $shortlisted_candidates)->get();
+        $interviewing_candidates = $internship->applications()->select("id", "user_id")->whereIn("user_id", $shortlisted_candidates)->get();
         $internship->applications()->whereIn("user_id", $shortlisted_candidates)->update([
             "status" => ApplicationTypes::INTERVIEW->value
         ]);
 
         Rejected::dispatch($rejected_candidates);
+        Interview::dispatch($interviewing_candidates);
     }
 }

@@ -14,6 +14,7 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PortfolioController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ReportTypeController;
+use App\Http\Controllers\SkillsController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Middleware\HasToken;
 use App\Http\Middleware\IsLoggedin;
@@ -22,6 +23,8 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Number;
+
+Route::post("/skills/add", [SkillsController::class, "store"]);
 
 Route::get("/send_message", [ChatController::class, "get"])->middleware("auth:api");
 // Route::post("/notification/{user}", [NotificationController::class, "notify"]);
@@ -59,7 +62,7 @@ Route::post("/user/{internship}/heart", [HeartActionController::class, "store"])
 Route::get("/status/get", [ApplicationStatusController::class, "get"]);
 
 Route::post("/user/{internship}/report", [ReportController::class, "store"]);
-Route::get("/report_types", [ReportTypeController::class, "get"]);;
+Route::get("/report_types", [ReportTypeController::class, "get"]);
 
 Route::post("login", [AuthenticationController::class, "login"])->name("login")
         ->withoutMiddleware(HasToken::class);

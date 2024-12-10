@@ -86,4 +86,7 @@ class User extends Authenticatable
     public function hires() {
         return $this->hasMany(Hire::class);
     }
+    public function skills() {
+        return $this->belongsToMany(Tag::class, "tags_users")->withPivot("id", "tag_id", "user_id");
+    }
 }

@@ -19,7 +19,6 @@
     :errors="errors"
     @close="is_reporting = false"
   ></report-modal>
-
   <div>
     <div
       v-if="is_reported"
@@ -28,38 +27,68 @@
       <i class="fa-solid fa-circle-info"></i>
       Thank you for reporting!
     </div>
-    <div v-else class="actions absolute right-5 flex gap-2 text-xs">
-      <div
-        class="bg-blue-500 text-white rounded flex justify-center items-center p-2 text-normal"
-        v-if="is_applied"
-      >
-        Applied
+    <div v-else-if="!is_reported" class="actions absolute right-5 text-xs">
+      <div class="action-for-users flex gap-2" v-if="viewFor === 'user'">
+        <div
+          class="bg-blue-500 text-white rounded flex justify-center items-center p-2 text-normal"
+          v-if="is_applied"
+        >
+          Applied
+        </div>
+        <button
+          v-if="is_logged_in"
+          class="bg-base-alt px-2 py-1 text-white rounded-md"
+          @click="heart"
+        >
+          <i
+            class="fa-solid fa-heart text-black like-button"
+            :class="{ active: is_hearted }"
+            v-if="is_hearted"
+          ></i>
+          <i class="fa-regular fa-heart" v-else></i>
+        </button>
+        <button
+          v-if="is_logged_in"
+          class="notify bg-red-500 text-white px-2 py-1 rounded-md"
+          @click="is_reporting = true"
+        >
+          <i class="fa-solid fa-flag"></i>
+        </button>
       </div>
-      <button
-        v-if="is_logged_in"
-        class="bg-base-alt px-2 py-1 text-white rounded-md"
-        @click="heart"
-      >
-        <i
-          class="fa-solid fa-heart text-black like-button"
-          :class="{ active: is_hearted }"
-          v-if="is_hearted"
-        ></i>
-        <i class="fa-regular fa-heart" v-else></i>
-      </button>
-      <button
-        v-if="is_logged_in"
-        class="notify bg-red-500 text-white px-2 py-1 rounded-md"
-        @click="is_reporting = true"
-      >
-        <i class="fa-solid fa-flag"></i>
-      </button>
+      <div class="action-for-companies relative" v-if="viewFor === 'company'">
+        <div
+          class="show-more-actions shade px-2 py-1 rounded-md"
+          @click="show_more_options = !show_more_options"
+        >
+          <i class="fa-solid fa-bars"></i>
+        </div>
+        <div
+          class="menu bg-white absolute shade mt-2 p-2 left-0 rounded"
+          style="width: 150px"
+          v-if="show_more_options"
+        >
+          <ul class="space-y-2">
+            <li class="flex items-center gap-2">
+              Analytics
+              <i class="fa-solid fa-chart-simple"></i>
+            </li>
+            <li class="flex items-center gap-2">
+              Update
+              <i class="fa-solid fa-pen"></i>
+            </li>
+            <li class="flex items-center gap-2">
+              Delete
+              <i class="fa-solid fa-trash"></i>
+            </li>
+          </ul>
+        </div>
+      </div>
     </div>
     <div class="internship-container" @click="showMore = true">
       <p class="text-xs">Posted {{ moment(internship.created_at).fromNow() }}</p>
       <h1 class="font-bold">{{ internship.title }}</h1>
       <p class="text-sm mt-1">
-        {{ internship.description.substring(0, 299) }}
+        {{ internship.description?.substring(0, 299) ?? "lol" }}
         {{ internship.length > 300 ? "..." : "" }}
       </p>
       <p class="text-xs mt-3">Stipend {{ internship.stipend }} PKR</p>
@@ -86,16 +115,23 @@ const props = defineProps({
   internship: Object,
   is_loading: Boolean,
   is_applied: Boolean,
+  viewFor: {
+    type: String,
+    default() {
+      return "user";
+    },
+  },
 });
 const showMore = ref(false);
 const is_applied = ref(props.is_applied);
-const is_hearted = ref(props.internship.hearts.length);
+const is_hearted = ref(props.internship.hearts?.length ?? false);
 const is_creating_application = ref(false);
 const postUrl = ref(`/api/user/${props.internship.id}/application/create`);
 const { isLoading, sendRequest, errors } = usePost(postUrl);
 const is_reporting = ref(false);
 const emits = defineEmits(["reported"]);
 const is_reported = ref(false);
+const show_more_options = ref(false);
 
 const apply = () => {
   is_creating_application.value = true;

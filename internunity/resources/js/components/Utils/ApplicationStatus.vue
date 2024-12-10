@@ -14,13 +14,12 @@
     <span
       class="tag text-xs rounded-full cursor-pointer p-2"
       :class="{
-        'bg-base-alt text-black': internshipType === 'interviewing',
-        'bg-black text-white': internshipType !== 'interviewing',
+        'bg-base-alt text-black': internshipType === 'interview',
+        'bg-black text-white': internshipType !== 'interview',
       }"
-      @click="$emit('changeType', 'interviewing')"
+      @click="$emit('changeType', 'interview')"
       >Interviewing ({{
-        internshipsData.filter((status) => status.status === "interviewing")[0]?.count ??
-        0
+        internshipsData.filter((status) => status.status === "interview")[0]?.count ?? 0
       }})</span
     >
     <span

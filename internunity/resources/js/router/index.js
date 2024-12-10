@@ -5,6 +5,10 @@ import Login from "../components/User/Login.vue";
 import isAuthenticated from "../middleware/isAuthenticated";
 import Profile from "../components/Profile.vue";
 import Applications from "../components/Applications.vue";
+import CompanyLogin from "../Company/Auth/Login.vue"
+import CompanyIndex from "../Company/Index.vue";
+import { before } from "lodash";
+import InternshipCreate from "../Company/Internship/create.vue";
 
 const routes = [
     {
@@ -40,9 +44,33 @@ const routes = [
             if(token) {
                 next();
             } else {
-                next({ name: 'home' })
+                next({ name: 'company-login' })
             }
         }
+    },
+    {
+        path: '/company',
+        component: CompanyIndex,
+        name: 'company',
+        beforeEnter: (to, from, next) => {
+            const token = localStorage.getItem("company_token");
+            if(token) {
+                next();
+            } else {
+                next({ name: 'company-login' })
+            }
+        }
+    },
+    {
+        path: '/company/login',
+        component: CompanyLogin,
+        name: 'company-login',
+        beforeEnter: [ isAuthenticated ]
+    },
+    {
+        path: '/company/internship/create',
+        component: InternshipCreate,
+        name: 'company.create',
     }
 ]
 

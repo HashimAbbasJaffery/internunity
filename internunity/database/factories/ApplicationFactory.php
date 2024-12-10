@@ -16,7 +16,7 @@ class ApplicationFactory extends Factory
      */
     public function definition(): array
     {
-        $status = [ "applied", "interviewing", "rejected", "selected" ];
+        $status = [ "applied", "interview", "rejected", "selected" ];
         return [
             "internship_id" => fake()->numberBetween(1, 50),
             "status" => fake()->randomElement($status),

@@ -2,14 +2,13 @@
 
 namespace App\Models;
 
-use App\Trait\Wallet\Wallet;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Laravel\Sanctum\HasApiTokens;
 
 class Company extends Model
 {
-    use HasFactory, HasApiTokens, Wallet;
+    use HasFactory, HasApiTokens;
     protected $guarded = ["id", "created_at", "updated_at"];
     public function internships() {
         return $this->hasMany(Internship::class);

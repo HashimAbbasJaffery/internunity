@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\Applied;
 use App\Http\Requests\ApplicationRequest;
 use App\Services\File;
 use App\Models\User;
@@ -26,7 +27,7 @@ class ApplicationController extends Controller
         $applications = $user->getUser()->applications();
         if($applications->where("internship_id", $internship)->exists()) abort(403);
         $resume = $file->upload($request->file("resume"), 'public', '/resumes/');
-        $applications->create([...$request->validated(), "internship_id" => $internship, "resume" => $resume]);
+        $application = $applications->create([...$request->validated(), "internship_id" => $internship, "resume" => $resume]);
         return 1;
     }
 }
