@@ -46,18 +46,8 @@
             :class="{ 'border border-red-500': errors.description }"
           ></textarea>
         </label>
-
-        <div class="added-skills flex gap-2 flex-wrap" v-if="added_skills.length">
-          <span
-            v-for="skill in added_skills"
-            :key="skill.id"
-            class="added-skill bg-base-alt text-xs text-white px-2 py-1 mb-3 rounded-full"
-            >{{ skill.name }}
-            <i class="ml-1 fa-solid fa-x cursor-pointer" @click="removeSkill(skill)"></i
-          ></span>
-        </div>
         <label for="tags">
-          <p class="text-sm mb-1 mt-3 font-bold">tags</p>
+          <p class="text-sm mb-1 font-bold">tags</p>
           <p class="text-xs text-red-500 mb-1" v-if="errors.tags">
             {{ errors.tags[0] }}
           </p>
@@ -88,6 +78,16 @@
             </ul>
           </div>
         </label>
+
+        <div class="added-skills flex gap-2 flex-wrap" v-if="added_skills.length">
+          <span
+            v-for="skill in added_skills"
+            :key="skill.id"
+            class="added-skill bg-base-alt text-xs text-white px-2 py-1 mb-3 rounded-full"
+            >{{ skill?.name ?? skill.tag }}
+            <i class="ml-1 fa-solid fa-x cursor-pointer" @click="removeSkill(skill)"></i
+          ></span>
+        </div>
         <button
           type="submit"
           :disabled="isLoading"
@@ -105,13 +105,14 @@ import { reactive, onMounted, watch, watchEffect, ref } from "vue";
 import usePost from "../../components/composables/post";
 import CompanyLayout from "../../components/Shared/CompanyLayout.vue";
 import Loader from "../../components/Utils/Loader.vue";
-import { useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import axios from "axios";
 import { debounce } from "lodash";
 
 const router = useRouter();
+const route = useRoute();
 
-const url = "/api/company/internship/create";
+const url = `/api/company/internship/${route.params.internship}/update`;
 const { isLoading, sendRequest, errors, returns } = usePost(url);
 const skillsList = ref([]);
 const is_fetching_skills = ref(false);
@@ -121,9 +122,20 @@ const form = reactive({
   title: "",
   stipend: "",
   description: "",
-  tags: "",
+  tags: "[1]",
   q: "",
 });
+
+const get_internship = async () => {
+  const status = await axios.get(`/api/company/internships/${route.params.internship}`);
+  console.log(status.data);
+
+  form.title = status.data.title;
+  form.stipend = status.data.stipend.replaceAll(",", "");
+  form.description = status.data.description;
+  added_skills.value = status.data.tags;
+  console.log(status.data.tags);
+};
 
 const getAccessToken = async () => {
   const config = {
@@ -150,25 +162,10 @@ const IsApiHealthy = async () => {
 };
 
 onMounted(async () => {
+  get_internship();
   const IsHealthy = await IsApiHealthy();
   if (!localStorage.access_token || !IsHealthy) getAccessToken();
 });
-
-const add_skill = (skill) => {
-  const does_exist = added_skills.value.filter(
-    (added_skill) => added_skill.id === skill.id
-  ).length;
-  if (does_exist) return;
-  added_skills.value.push(skill);
-  form.q = "";
-  skillsList.value = [];
-};
-
-const removeSkill = (skill) => {
-  added_skills.value = added_skills.value.filter(
-    (added_skill) => added_skill.id !== skill.id
-  );
-};
 
 const getSkill = async (q) => {
   if (!q) {
@@ -197,11 +194,33 @@ watch(
 
 const create = (e) => {
   e.preventDefault();
+
   form.tags = added_skills;
-  sendRequest({ ...form }, function (res) {
+  sendRequest({ ...form, _method: "PUT" }, function (res) {
     if (res.data) {
       router.push("/company");
     }
   });
 };
+
+const removeSkill = (skill) => {
+  added_skills.value = added_skills.value.filter(
+    (added_skill) => added_skill.id !== skill.id
+  );
+};
+
+const add_skill = (skill) => {
+  const does_exist = added_skills.value.filter(
+    (added_skill) => added_skill.id === skill.id
+  ).length;
+  if (does_exist) return;
+  added_skills.value.push(skill);
+  form.q = "";
+  skillsList.value = [];
+};
+
+watch(
+  () => form.q,
+  debounce(() => getSkill(form.q), 500)
+);
 </script>

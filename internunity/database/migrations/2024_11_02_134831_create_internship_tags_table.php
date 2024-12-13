@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('internship_tags', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId("tag_id")->constrained()->cascadeOnDelete();
+            $table->string("tag_id");
+            $table->foreign("tag_id")->references("id")->on("tags")->cascadeOnDelete();
             $table->foreignId("internship_id")->constrained()->cascadeOnDelete();
             $table->unique([ "tag_id", "internship_id" ]);
             $table->timestamps();

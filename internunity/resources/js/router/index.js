@@ -9,6 +9,8 @@ import CompanyLogin from "../Company/Auth/Login.vue"
 import CompanyIndex from "../Company/Index.vue";
 import { before } from "lodash";
 import InternshipCreate from "../Company/Internship/create.vue";
+import InternshipUpdate from "../Company/Internship/update.vue";
+import ApplicationsList from "../Company/Internship/Applications/Index.vue";
 
 const routes = [
     {
@@ -71,6 +73,16 @@ const routes = [
         path: '/company/internship/create',
         component: InternshipCreate,
         name: 'company.create',
+    },
+    {
+        path: '/company/internship/:internship/update',
+        component: InternshipUpdate,
+        name: 'company.update'
+    },
+    {
+        path: '/company/internship/:internship/applications',
+        component: ApplicationsList,
+        name: 'company.applications'
     }
 ]
 

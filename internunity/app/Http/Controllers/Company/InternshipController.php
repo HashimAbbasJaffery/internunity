@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Company;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\InternshipCreateRequest;
 use App\Models\Internship;
+use App\Models\Tag;
 use DB;
 use Illuminate\Http\Request;
 use Laravel\Sanctum\PersonalAccessToken;
@@ -15,7 +16,8 @@ class InternshipController extends Controller
     public function get(Request $request) {
         $keyword = $request->keyword;
         $company = (PersonalAccessToken::findToken($request->bearerToken()))->tokenable;
-        return $company->internships()->select(["title", "description", "stipend", "status", "created_at"])
+        return $company->internships()->select(["id", "title", "description", "stipend", "status", "created_at"])
+                        ->with("tags")
                         ->latest()
                         ->orderBy("created_at", "desc")
                         ->withCount("applications")
@@ -28,11 +30,24 @@ class InternshipController extends Controller
         $is_deleted = $internship->delete();
         return $is_deleted;
     }
+    // InternshipCreateRequest
     public function store(InternshipCreateRequest $request) {
-
         $company = (PersonalAccessToken::findToken($request->bearerToken()))->tokenable;
 
-        DB::transaction(function() use($request, $company) {
+        // Attaching tags if incoming tag is new
+        $internship_tags = collect($request->tags);
+        $all_tags = Tag::all()->pluck("id");
+        $tags_to_add = $internship_tags->pluck("id")->diff($all_tags);
+        foreach($tags_to_add as $tag) {
+            $tag = $internship_tags->where("id", $tag)->first();
+            Tag::create([
+                "id" => $tag["id"],
+                "tag" => $tag["name"],
+                "status" => 1
+            ]);
+        }
+
+        DB::transaction(function() use($request, $company, $internship_tags) {
 
             // Deducting amount from the wallet
             if($company->wallet->balance < 5) return;
@@ -49,10 +64,9 @@ class InternshipController extends Controller
             ]);
 
             // If there are no tags then rollback all previous transactions
-            if(!json_decode($request->tags)) DB::rollBack();
-
+            if(!$internship_tags->pluck("id")) DB::rollBack();
             // Attach tags
-            $internship->tags()->sync(json_decode($request->tags));
+            $internship->tags()->sync($internship_tags->pluck("id"));
         });
 
         return 1;
@@ -66,10 +80,23 @@ class InternshipController extends Controller
             "tags" => ["required"]
         ]);
 
+          // Attaching tags if incoming tag is new
+          $internship_tags = collect($request->tags);
+          $all_tags = Tag::all()->pluck("id");
+          $tags_to_add = $internship_tags->pluck("id")->diff($all_tags);
+          foreach($tags_to_add as $tag) {
+              $tag = $internship_tags->where("id", $tag)->first();
+              Tag::create([
+                  "id" => $tag["id"],
+                  "tag" => $tag["name"],
+                  "status" => 1
+              ]);
+          }
+
         $company = (PersonalAccessToken::findToken($request->bearerToken()))->tokenable;
 
         if($internship->company_id !== $company->id) return [ "message" => 'Unauthorized', "status" => 403 ];
-        DB::transaction(function() use($request, $company, $internship) {
+        DB::transaction(function() use($request, $company, $internship, $internship_tags) {
             $internship->update([
                 "title" => $request->title,
                 "description" => $request->description,
@@ -78,11 +105,15 @@ class InternshipController extends Controller
                 "status" => 1
             ]);
 
-            if(!json_decode($request->tags)) DB::rollBack();
-
-            $internship->tags()->sync(json_decode($request->tags));
+            // If there are no tags then rollback all previous transactions
+            if(!$internship_tags->pluck("id")) DB::rollBack();
+            // Attach tags
+            $internship->tags()->sync($internship_tags->pluck("id"));
         });
 
         return 1;
+    }
+    public function get_by_id(Internship $internship) {
+        return $internship->load(["tags"])->only(["id", "title", "description", "stipend", "tags"]);
     }
 }

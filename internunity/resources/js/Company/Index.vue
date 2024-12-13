@@ -9,7 +9,12 @@
         class="container mx-auto mt-9 w-2/3"
         :class="{ 'divide-y-2': !is_loading }"
       >
-        <button class="bg-base-alt text-white px-2 py-1 rounded">New Internship</button>
+        <button
+          class="bg-base-alt text-white px-2 py-1 rounded hover:bg-base-alt/75"
+          @click="$router.push('/company/internship/create')"
+        >
+          New Internship
+        </button>
         <Internships viewFor="company" url="/api/company/internships"></Internships>
         <div
           v-if="is_loading"

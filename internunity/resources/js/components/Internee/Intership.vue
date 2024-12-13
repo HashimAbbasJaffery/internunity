@@ -27,6 +27,13 @@
       <i class="fa-solid fa-circle-info"></i>
       Thank you for reporting!
     </div>
+    <div
+      v-if="is_deleted"
+      class="reported absolute bg-white text-sm w-full h-full flex justify-center items-center gap-2"
+    >
+      <i class="fa-solid fa-circle-info"></i>
+      This Internship is deleted
+    </div>
     <div v-else-if="!is_reported" class="actions absolute right-5 text-xs">
       <div class="action-for-users flex gap-2" v-if="viewFor === 'user'">
         <div
@@ -69,14 +76,17 @@
         >
           <ul class="space-y-2">
             <li class="flex items-center gap-2">
-              Analytics
+              Applications
               <i class="fa-solid fa-chart-simple"></i>
             </li>
-            <li class="flex items-center gap-2">
+            <li
+              @click="$router.push(`/company/internship/${internship.id}/update`)"
+              class="flex items-center gap-2"
+            >
               Update
               <i class="fa-solid fa-pen"></i>
             </li>
-            <li class="flex items-center gap-2">
+            <li class="flex items-center gap-2" @click="deleteInternship(internship.id)">
               Delete
               <i class="fa-solid fa-trash"></i>
             </li>
@@ -132,6 +142,7 @@ const is_reporting = ref(false);
 const emits = defineEmits(["reported"]);
 const is_reported = ref(false);
 const show_more_options = ref(false);
+const is_deleted = ref(false);
 
 const apply = () => {
   is_creating_application.value = true;
@@ -165,5 +176,15 @@ const sendReport = (report) => {
       is_reported.value = true;
     }
   });
+};
+
+const deleteInternship = async (id) => {
+  const status = await axios.post(`/api/company/internship/${id}/delete`, {
+    _method: "DELETE",
+  });
+  console.log(status.data);
+  if (status.data) {
+    is_deleted.value = true;
+  }
 };
 </script>

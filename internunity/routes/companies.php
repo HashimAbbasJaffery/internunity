@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::get("internships", [InternshipController::class, "get"]);
+Route::get("internships/{internship}", [InternshipController::class, "get_by_id"]);
 Route::get("internship/{internship}/applications", [ApplicationsController::class, "get"]);
 Route::delete("internship/{internship}/delete", [InternshipController::class, "delete"]);
 Route::post("internship/create", [InternshipController::class, "store"]);
