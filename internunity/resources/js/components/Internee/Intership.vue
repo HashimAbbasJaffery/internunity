@@ -63,19 +63,15 @@
         </button>
       </div>
       <div class="action-for-companies relative" v-if="viewFor === 'company'">
-        <div
-          class="show-more-actions shade px-2 py-1 rounded-md"
-          @click="show_more_options = !show_more_options"
-        >
-          <i class="fa-solid fa-bars"></i>
-        </div>
-        <div
-          class="menu bg-white absolute shade mt-2 p-2 left-0 rounded"
-          style="width: 150px"
-          v-if="show_more_options"
+        <bar
+          :show_more_options="show_more_options"
+          @toggle="show_more_options = !show_more_options"
         >
           <ul class="space-y-2">
-            <li class="flex items-center gap-2">
+            <li
+              class="flex items-center gap-2"
+              @click="$router.push(`/company/internship/${internship.id}/applications`)"
+            >
               Applications
               <i class="fa-solid fa-chart-simple"></i>
             </li>
@@ -91,7 +87,7 @@
               <i class="fa-solid fa-trash"></i>
             </li>
           </ul>
-        </div>
+        </bar>
       </div>
     </div>
     <div class="internship-container" @click="showMore = true">
@@ -101,7 +97,9 @@
         {{ internship.description?.substring(0, 299) ?? "lol" }}
         {{ internship.length > 300 ? "..." : "" }}
       </p>
-      <p class="text-xs mt-3">Stipend {{ internship.stipend }} PKR</p>
+      <div class="others flex items-center justify-between mt-3 gap-2">
+        <p class="text-xs">Stipend {{ internship.stipend }} PKR</p>
+      </div>
       <div class="tags my-3 space-x-2">
         <span
           v-for="tag in internship.tags"
@@ -120,6 +118,7 @@ import ShowMore from "../Modals/ShowMore.vue";
 import usePost from "../composables/post";
 import SubmitApplication from "../Modals/SubmitApplication.vue";
 import ReportModal from "../Modals/ReportModal.vue";
+import Bar from "../Utils/Bar.vue";
 
 const props = defineProps({
   internship: Object,

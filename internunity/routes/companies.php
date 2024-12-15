@@ -16,9 +16,12 @@ Route::post("internship/create", [InternshipController::class, "store"]);
 Route::put("internship/{internship}/update", [InternshipController::class, "update"]);
 
 // Internship Actions
-Route::post("/internship/{internship}/hire", [HiringController::class, "hire"]);
+Route::put("/internship/{application}/hire", [HiringController::class, "hire"]);
 Route::put("/internship/{internship}/close", [HiringController::class, "close"]);
 Route::put("/internship/{internship}/shortlist", [HiringController::class, "shortlist"]);
+Route::put("/internship/{application}/reject", [HiringController::class, "reject"]);
+
+Route::get("/applications/{internship}", [ApplicationsController::class, "get_by_internship"]);
 
 Route::post("login", [\App\Http\Controllers\Company\Auth\AuthenticationController::class, "login"])
     ->withoutMiddleware(HasToken::class);

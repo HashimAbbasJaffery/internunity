@@ -10,39 +10,36 @@ use App\Models\Application;
 use App\Models\Internship;
 use DB;
 use Illuminate\Http\Request;
+use Mail;
 
 class HiringController extends Controller
 {
-    public function hire(Request $request, Internship $internship) {
+    public function hire(Application $application) {
+        if($application->status === ApplicationTypes::SELECTED->value) return;
 
-        $user_id = request()->user_id;
-        $hiree_application = $internship
-                                    ->applications()
-                                    ->where("user_id", $user_id)
-                                    ->where("internship_id", $internship->id)
-                                    ->first();
+        $application->status = ApplicationTypes::SELECTED->value;
+        $application->save();
 
-        $hiree_application->internship->hires()->create([
-            "user_id" => $user_id
+        $application->internship->hires()->create([
+            "user_id" => $application->user_id
         ]);
 
-        Hired::dispatch($hiree_application);
+        Mail::to($application->user->email)->queue(new \App\Mail\Hired());
     }
 
     public function close(Internship $internship) {
-        $rejected_application = Application::query()
-            ->join('users', 'applications.user_id', '=', second: 'users.id')
-            ->leftJoin('hires', 'applications.user_id', '=', 'hires.user_id')
-            ->whereNull('hires.user_id')
-            ->where('applications.internship_id', 55)
-            ->select("applications.id", "users.email")
-            ->get();
+        $rejected_application = $internship
+                    ->applications()
+                    ->whereIn("status", [ApplicationTypes::APPLIED->value, ApplicationTypes::INTERVIEW->value])
+                    ->get();
 
         $internship->status = 0;
         $internship->save();
 
         Rejected::dispatch($rejected_application);
+        return 1;
     }
+
 
     public function shortlist(Request $request, Internship $internship) {
         $shortlisted_candidates = json_decode($request->candidates_id);
@@ -55,5 +52,13 @@ class HiringController extends Controller
 
         Rejected::dispatch($rejected_candidates);
         Interview::dispatch($interviewing_candidates);
+    }
+    public function reject(Application $application) {
+        if($application->status === ApplicationTypes::REJECTED->value) return;
+
+        $application->status = ApplicationTypes::REJECTED->value;
+        $application->save();
+
+        Mail::to($application->user->email)->queue(new \App\Mail\Rejected());
     }
 }

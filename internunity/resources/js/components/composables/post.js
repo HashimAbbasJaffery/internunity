@@ -10,8 +10,12 @@ export default function usePost(url) {
         isLoading.value = true;
         let hasErrors = false;
         if(additionalLoader) additionalLoader.value = true;
-
-        axios.post(toValue(url), data)
+        const config = {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        }
+        axios.post(toValue(url), data, config)
             .then(res => {
                 console.log(res);
                 returns.value = res

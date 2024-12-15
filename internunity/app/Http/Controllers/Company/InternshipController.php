@@ -19,6 +19,7 @@ class InternshipController extends Controller
         return $company->internships()->select(["id", "title", "description", "stipend", "status", "created_at"])
                         ->with("tags")
                         ->latest()
+                        ->whereStatus(1)
                         ->orderBy("created_at", "desc")
                         ->withCount("applications")
                         ->whereLike('title', "%$keyword%")
@@ -114,6 +115,6 @@ class InternshipController extends Controller
         return 1;
     }
     public function get_by_id(Internship $internship) {
-        return $internship->load(["tags"])->only(["id", "title", "description", "stipend", "tags"]);
+        return $internship->load(["tags"])->only(["id", "title", "description", "stipend", "status"]);
     }
 }

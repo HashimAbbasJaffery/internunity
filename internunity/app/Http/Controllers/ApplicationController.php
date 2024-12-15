@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Events\Applied;
 use App\Http\Requests\ApplicationRequest;
+use App\Models\Internship;
 use App\Services\File;
 use App\Models\User;
 
@@ -23,6 +24,7 @@ class ApplicationController extends Controller
                                 ->withQueryString();
         return $applications;
     }
+
     public function store(ApplicationRequest $request, User $user, $internship, File $file) {
         $applications = $user->getUser()->applications();
         if($applications->where("internship_id", $internship)->exists()) abort(403);

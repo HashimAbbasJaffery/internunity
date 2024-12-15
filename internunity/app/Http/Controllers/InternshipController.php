@@ -9,7 +9,7 @@ class InternshipController extends Controller
     public function index(\App\Models\User $user) {
         $keyword = request()->keyword;
         $user_id = $user->getUser()?->id ?? false;
-        // $skill_ids = $user->getUser()->skills->map(fn($skill) => $skill->pivot->tag_id);
+        $skill_ids = $user->getUser()->skills->map(fn($skill) => $skill->pivot->tag_id);
 
         $relationships = [
             "tags" => fn($query) => $query->where("status", 1),
@@ -20,6 +20,7 @@ class InternshipController extends Controller
         $internships = Internship::with($relationships)
                                 ->whereDoesntHave("reports", fn($query) => $query->where("user_id", $user_id))
                                 ->where("title", "LIKE", "%$keyword%")
+                                ->whereHas("tags", fn($query) => $query->whereIn("tag_id", $skill_ids))
                                 ->whereStatus(1)
                                 ->latest()
                                 ->paginate(8)

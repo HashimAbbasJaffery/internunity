@@ -1,71 +1,134 @@
 <template>
   <company-layout>
-    <div class="container mt-4 rounded mx-auto w-2/3">
-      <div class="internship shade p-2">
-        <h1 class="text-xl font-bold">Laravel Developer</h1>
-        <p class="text-sm">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatem quo odio
-          impedit pariatur distinctio, eius animi? Nostrum sunt repellat voluptas
-          blanditiis labore sed ea perspiciatis, nesciunt itaque accusamus reprehenderit
-          iusto tempore illo natus suscipit. Minus quisquam aliquam neque facere
-          distinctio deleniti, iusto ipsum labore, voluptates iste dolor reprehenderit
-          atque! Nisi officiis veritatis odit reprehenderit saepe soluta incidunt aut,
-          quisquam quam, veniam assumenda, dolorum temporibus rerum repellendus qui! Sit,
-          quas nemo. Tempore quae eaque porro cumque magnam pariatur minus reprehenderit
-          sint quasi accusantium expedita facere excepturi recusandae modi, ab asperiores,
-          unde corrupti natus cupiditate ipsam impedit autem quis eligendi. Molestias,
-          alias.
-        </p>
-
-        <p class="text-xs text-gray-400 italic mt-3">Stipend: 10,000 RS</p>
-      </div>
-      <div class="applications">
-        <div class="application mt-4 p-4 shade flex">
-          <div
-            class="application-submitter w-1/6 flex flex-col justify-center items-center"
+    <div class="content" v-if="!actions.loading">
+      <div class="container mt-4 rounded mx-auto w-2/3 relative">
+        <div class="absolute right-3 top-3">
+          <bar
+            class="text-xs"
+            @toggle="show_more_options = !show_more_options"
+            :show_more_options="show_more_options"
           >
-            <img
-              src="https://placehold.co/60x60"
-              width="60"
-              class="rounded-full"
-              alt=""
-            />
-            <p class="text-xs text-gray-400 mt-1">Hashim Abbas</p>
-            <button class="text-xs bg-base-alt text-white rounded-md px-2 py-1 mt-2">
-              View Profile
-            </button>
-          </div>
-          <div class="w-5/6">
-            <p class="text-xs leading-5 cover-letter">
-              Lorem ipsum dolor sit, amet consectetur adipisicing elit. Similique deserunt
-              enim iste autem sint sit adipisci modi asperiores dolor voluptas consequatur
-              maiores, sapiente eveniet accusamus libero pariatur nesciunt quis mollitia
-              vitae quaerat quisquam consequuntur. Officiis dolore commodi atque a
-              similique voluptates voluptate voluptatum, doloremque provident ad ullam
-              eveniet. Eius rem nesciunt corrupti quidem a consequatur repudiandae error,
-              iure impedit ipsam odit quas nisi amet praesentium recusandae molestias
-              labore eveniet pariatur non. In, excepturi maxime. Alias voluptatibus
-              quisquam repudiandae est praesentium molestiae, iste ratione expedita eius
-              maxime maiores reprehenderit quo illo mollitia esse nulla possimus, id
-              reiciendis doloribus! Aut, enim natus!
-            </p>
-            <div class="actions flex gap-2">
-              <button class="bg-black text-white text-xs rounded-md px-2 py-1 mt-2">
-                Message
-              </button>
-              <button class="bg-black text-white text-xs rounded-md px-2 py-1 mt-2">
-                Hire
-              </button>
-              <button class="bg-black text-white text-xs rounded-md px-2 py-1 mt-2">
-                Reject
-              </button>
-            </div>
-          </div>
+            <ul class="space-y-2 text-xs">
+              <li class="flex items-center gap-2" @click="closeInternship">
+                Close Application
+              </li>
+              <li
+                @click="$router.push(`/company/internship/${internship.id}/update`)"
+                class="flex items-center gap-2"
+              >
+                Update
+                <i class="fa-solid fa-pen"></i>
+              </li>
+              <li
+                class="flex items-center gap-2"
+                @click="deleteInternship(internship.id)"
+              >
+                Delete
+                <i class="fa-solid fa-trash"></i>
+              </li>
+            </ul>
+          </bar>
         </div>
+        <div class="internship shade p-2">
+          <h1 class="text-xl font-bold">{{ internship.title }}</h1>
+          <p class="text-sm">
+            {{ internship.description }}
+          </p>
+
+          <p class="text-xs text-gray-400 italic mt-3">
+            Stipend: {{ internship.stipend }} RS
+          </p>
+        </div>
+        <div class="applications" v-if="applications?.length && !actions.closed">
+          <application
+            v-for="application in applications"
+            :key="application.id"
+            :application="application"
+          ></application>
+        </div>
+        <div
+          v-else-if="actions.closed"
+          class="bg-red-400 text-white px-3 py-2 mt-3 rounded-md"
+        >
+          This internship has been closed!
+        </div>
+        <div v-else class="bg-base-alt px-3 py-2 rounded mt-2">No Applications yet!</div>
       </div>
+      <div class="loading-container p-3">
+        <load-more
+          v-if="next_applications"
+          :is_loading="is_loading_more"
+          class="mx-auto"
+          @click="get_applications(next_applications)"
+        ></load-more>
+      </div>
+    </div>
+    <div v-else class="mt-5 loader-container flex justify-center">
+      <loader class="loader"></loader>
     </div>
   </company-layout>
 </template>
 <script setup>
+import { provide, onMounted, reactive, ref } from "vue";
 import CompanyLayout from "../../../components/Shared/CompanyLayout.vue";
+import { useRoute } from "vue-router";
+import axios from "axios";
+import Application from "../../../components/Utils/Application.vue";
+import LoadMore from "../../../components/Utils/LoadMore.vue";
+import Bar from "../../../components/Utils/Bar.vue";
+import Loader from "../../../components/Utils/Loader.vue";
+
+const route = useRoute();
+const internship = ref([]);
+const global_loader = ref(false);
+const is_loading_more = ref(false);
+const applications = ref([]);
+const next_applications = ref();
+const show_more_options = ref(false);
+
+const get_internship = async () => {
+  const status = await axios.get(`/api/company/internships/${route.params.internship}`);
+  internship.value = status.data;
+};
+
+const actions = reactive({
+  closing: false,
+  closed: false,
+  loading: false,
+});
+
+provide("closed", actions.closed);
+
+const get_applications = async () => {
+  is_loading_more.value = true;
+  const status = await axios.get(
+    next_applications.value
+      ? next_applications.value
+      : `/api/company/applications/${internship.value.id}`
+  );
+  next_applications.value = status.data.next_page_url;
+  is_loading_more.value = false;
+  applications.value.push(...status.data.data);
+};
+
+onMounted(async () => {
+  actions.loading = true;
+  await get_internship();
+  await get_applications();
+  actions.loading = false;
+  actions.closed = !internship.value.status;
+});
+
+const closeInternship = async () => {
+  actions.closing = true;
+  const status = await axios.post(
+    `/api/company/internship/${route.params.internship}/close`,
+    {
+      _method: "PUT",
+    }
+  );
+  actions.closing = false;
+  console.log(status.data);
+  if (status.data) actions.closed = true;
+};
 </script>

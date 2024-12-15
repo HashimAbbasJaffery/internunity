@@ -30,6 +30,7 @@ class ApplicationStatusChangeListener implements ShouldQueue
      */
     public function handle(Rejected|Interview|Applied $event): void
     {
+        // Get type whether event is rejected, interview or applied
         $status = $this->type[get_class($event)];
 
         // Setting specified status to users

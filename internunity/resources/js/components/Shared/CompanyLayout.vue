@@ -63,9 +63,12 @@
       </nav>
     </div>
   </header>
-  <div class="fixed bottom-0 right-0 z-20 w-full flex flex-row-reverse gap-2 items-end">
+  <div
+    class="fixed bottom-0 right-0 z-20 w-1/5 flex flex-row-reverse gap-2 items-end bg-blue-300"
+  >
     <chat-box
       :rooms="chat_rooms"
+      class="w-full"
       :message_notifications="message_notifications"
     ></chat-box>
     <chat-instance
