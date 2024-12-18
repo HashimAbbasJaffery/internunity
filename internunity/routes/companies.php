@@ -3,6 +3,7 @@
 
 use App\Http\Controllers\Company\ApplicationsController;
 use App\Http\Controllers\Company\InternshipController;
+use App\Http\Controllers\Company\UserController;
 use App\Http\Controllers\HiringController;
 use App\Http\Middleware\HasToken;
 use Illuminate\Support\Facades\Route;
@@ -22,6 +23,8 @@ Route::put("/internship/{internship}/shortlist", [HiringController::class, "shor
 Route::put("/internship/{application}/reject", [HiringController::class, "reject"]);
 
 Route::get("/applications/{internship}", [ApplicationsController::class, "get_by_internship"]);
+
+Route::get("/users", [UserController::class, "get"]);
 
 Route::post("login", [\App\Http\Controllers\Company\Auth\AuthenticationController::class, "login"])
     ->withoutMiddleware(HasToken::class);

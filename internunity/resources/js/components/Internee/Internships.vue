@@ -1,16 +1,24 @@
 <template>
+  <div class="internship-container" v-if="internships.length">
+    <div
+      v-show="!is_loading"
+      v-for="internship in internships"
+      :key="internship.id"
+      class="relative internship bg-white mt-3 rounded-md p-2 hover:bg-grey cursor-pointer"
+    >
+      <Intership
+        :is_applied="internship.applications?.length ?? false"
+        :internship="internship"
+        :is_loading="is_loading"
+        :viewFor="viewFor"
+      ></Intership>
+    </div>
+  </div>
   <div
-    v-show="!is_loading"
-    v-for="internship in internships"
-    :key="internship.id"
-    class="relative internship bg-white mt-3 rounded-md p-2 hover:bg-grey cursor-pointer"
+    class="not-found bg-red-500 text-white px-3 py-2 rounded mt-3"
+    v-else-if="!is_loading && !internships.length"
   >
-    <Intership
-      :is_applied="internship.applications?.length ?? false"
-      :internship="internship"
-      :is_loading="is_loading"
-      :viewFor="viewFor"
-    ></Intership>
+    <p>No Internship found!</p>
   </div>
   <div
     v-if="is_loading"
@@ -85,16 +93,11 @@ const reported = () => {
 const searchInternships = () => {
   internships.value = [];
   show_global_loading.value = true;
+
   url.value = `${props.url}?keyword=${keyword.value}`;
+  fetch();
 };
 
 const keyword = inject("keyword");
 watch(keyword, debounce(searchInternships, 500));
-
-const nextData = () => {
-  if (!props.nextList) {
-    url.value = next.value;
-  } else {
-  }
-};
 </script>

@@ -18,9 +18,9 @@ class InternshipController extends Controller
         ];
 
         $internships = Internship::with($relationships)
+                                ->whereHas("tags", fn($query) => $query->whereIn("tag_id", $skill_ids))
                                 ->whereDoesntHave("reports", fn($query) => $query->where("user_id", $user_id))
                                 ->where("title", "LIKE", "%$keyword%")
-                                ->whereHas("tags", fn($query) => $query->whereIn("tag_id", $skill_ids))
                                 ->whereStatus(1)
                                 ->latest()
                                 ->paginate(8)

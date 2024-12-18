@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string("profile_pic")->nullable();
             $table->date("date_of_birth");
             $table->boolean("has_notifications")->default(false);
+            $table->string("tagline")->nullable();
             $table->rememberToken();
             $table->timestamps();
 

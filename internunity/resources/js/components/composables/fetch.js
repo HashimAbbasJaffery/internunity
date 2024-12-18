@@ -1,4 +1,4 @@
-import { onMounted, ref, watchEffect, toValue } from "vue";
+import { onMounted, ref, watchEffect, toValue, watch } from "vue";
 import axios from "axios";
 
 const show_loading = (show_global_loading, is_loading) => {
@@ -19,7 +19,7 @@ export default function useFetch(url, show_global_loading) {
     const is_loading = ref(true);
     const is_loading_more = ref(true);
     const next = ref();
-
+    const on_load_fetched = ref(false);
 
     const fetchData = () => {
         show_loading(show_global_loading, is_loading);
@@ -47,7 +47,9 @@ export default function useFetch(url, show_global_loading) {
     }
 
     watchEffect(() => {
+        if(!on_load_fetched.value)
         fetchData();
+        on_load_fetched.value = true;
     })
 
     return { internshipsData, is_loading, is_loading_more, next, fetch, per_page };

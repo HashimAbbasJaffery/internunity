@@ -150,8 +150,12 @@ const IsApiHealthy = async () => {
 };
 
 onMounted(async () => {
-  const IsHealthy = await IsApiHealthy();
-  if (!localStorage.access_token || !IsHealthy) getAccessToken();
+  try {
+    const IsHealthy = await IsApiHealthy();
+  } catch (e) {
+    getAccessToken();
+  }
+  //   if (!localStorage.access_token || IsHealthy.status === 401) getAccessToken();
 });
 
 const add_skill = (skill) => {

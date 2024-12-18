@@ -21,7 +21,7 @@ class InternshipController extends Controller
                         ->latest()
                         ->whereStatus(1)
                         ->orderBy("created_at", "desc")
-                        ->withCount("applications")
+                        ->withCount(["applications" => fn($query) => $query->whereNot("status", "rejected")])
                         ->whereLike('title', "%$keyword%")
                         ->paginate(8);
     }

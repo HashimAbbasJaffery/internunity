@@ -1,24 +1,26 @@
 <template>
-  <show-more
-    class="right-0"
-    :is_applied="is_applied"
-    :internship="internship"
-    v-if="showMore"
-    @apply="apply"
-    @close="showMore = false"
-  ></show-more>
-  <submit-application
-    @create="createApplication($event)"
-    v-if="is_creating_application"
-    :errors="errors"
-    @close="is_creating_application = false"
-  ></submit-application>
-  <report-modal
-    @create="sendReport($event)"
-    v-if="is_reporting"
-    :errors="errors"
-    @close="is_reporting = false"
-  ></report-modal>
+  <div class="modals" v-if="viewFor === 'user'">
+    <show-more
+      class="right-0"
+      :is_applied="is_applied"
+      :internship="internship"
+      v-if="showMore"
+      @apply="apply"
+      @close="showMore = false"
+    ></show-more>
+    <submit-application
+      @create="createApplication($event)"
+      v-if="is_creating_application"
+      :errors="errors"
+      @close="is_creating_application = false"
+    ></submit-application>
+    <report-modal
+      @create="sendReport($event)"
+      v-if="is_reporting"
+      :errors="errors"
+      @close="is_reporting = false"
+    ></report-modal>
+  </div>
   <div>
     <div
       v-if="is_reported"
@@ -91,7 +93,10 @@
       </div>
     </div>
     <div class="internship-container" @click="showMore = true">
-      <p class="text-xs">Posted {{ moment(internship.created_at).fromNow() }}</p>
+      <p class="text-xs">
+        Posted {{ moment(internship.created_at).fromNow() }} |
+        {{ internship?.applications_count ?? 0 }} Applications
+      </p>
       <h1 class="font-bold">{{ internship.title }}</h1>
       <p class="text-sm mt-1">
         {{ internship.description?.substring(0, 299) ?? "lol" }}

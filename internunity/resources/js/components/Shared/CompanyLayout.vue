@@ -8,7 +8,7 @@
         <ul class="flex items-center space-x-2">
           <li
             class="px-3 rounded py-1"
-            :class="{ 'bg-shade text-black': $route.name === 'home' }"
+            :class="{ 'bg-shade text-black': $route.name === 'company' }"
           >
             <RouterLink to="/">Internships</RouterLink>
           </li>

@@ -11,6 +11,7 @@ import { before } from "lodash";
 import InternshipCreate from "../Company/Internship/create.vue";
 import InternshipUpdate from "../Company/Internship/update.vue";
 import ApplicationsList from "../Company/Internship/Applications/Index.vue";
+import Users from "../Company/Users/Index.vue";
 
 const routes = [
     {
@@ -83,6 +84,11 @@ const routes = [
         path: '/company/internship/:internship/applications',
         component: ApplicationsList,
         name: 'company.applications'
+    },
+    {
+        path: '/company/user',
+        component: Users,
+        name: 'company.users'
     }
 ]
 
