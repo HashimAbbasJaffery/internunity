@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -51,6 +52,13 @@ class User extends Authenticatable
         ];
     }
 
+    public function HeartedByLoggedCompanyId(): Attribute {
+        $loggedUser = (PersonalAccessToken::findToken(request()->bearerToken()))->tokenable;
+        return Attribute::make(
+            get: fn($query) => $query->heartedByCompany()->where("id", $loggedUser->user)
+        );
+    }
+
     public function hearted_internships() {
         return $this->belongsToMany(Internship::class, "liked_internship");
     }
@@ -89,4 +97,14 @@ class User extends Authenticatable
     public function skills() {
         return $this->belongsToMany(Tag::class, "tags_users")->withPivot("id", "tag_id", "user_id");
     }
+    public function profileHearts() {
+        return $this->morphToMany(User::class, 'heartable', 'user_hearts');
+    }
+    public function heartedByUser() {
+        return $this->morphedByMany(User::class, 'heartable', 'user_hearts');
+    }
+    public function heartedByCompany() {
+        return $this->morphedByMany(Company::class, 'heartable', 'user_hearts');
+    }
+
 }

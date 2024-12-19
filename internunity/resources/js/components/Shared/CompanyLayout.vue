@@ -102,6 +102,7 @@ const notificationsList = ref([]);
 const show_all_notifications = ref(false);
 const chat_rooms = ref([]);
 const chats = ref([]);
+const company = ref([]);
 provide("chats", chats);
 
 // const removeAllUserItems = () => {

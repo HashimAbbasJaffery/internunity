@@ -89,6 +89,10 @@ import { onMounted, reactive, ref, watch } from "vue";
 import Loader from "../Utils/Loader.vue";
 import usePost from "../composables/post";
 
+const props = defineProps({
+  is_editable: Boolean,
+});
+
 // Main Data source, which is providing data to be inserted in composables
 
 const getData = () => {

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Laravel\Sanctum\HasApiTokens;
+use Laravel\Sanctum\PersonalAccessToken;
 
 class Company extends Model
 {
@@ -21,5 +22,8 @@ class Company extends Model
         return [
             'password' => 'hashed',
         ];
+    }
+    public function profileHearts() {
+        return $this->morphToMany(User::class, 'heartable', 'user_hearts');
     }
 }

@@ -16,7 +16,7 @@ return new class extends Migration
             $table->id();
             $table->string("project_pic")->nullable();
             $table->string("title");
-            $table->string("description");
+            $table->text("description");
             $table->date("from")->default(now());
             $table->date("to");
             $table->string("github");

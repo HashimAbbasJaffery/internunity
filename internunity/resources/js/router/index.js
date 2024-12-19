@@ -86,9 +86,14 @@ const routes = [
         name: 'company.applications'
     },
     {
-        path: '/company/user',
+        path: '/company/users',
         component: Users,
         name: 'company.users'
+    },
+    {
+        path: '/company/:user/profile',
+        component: Profile,
+        name: 'company.profile'
     }
 ]
 

@@ -34,7 +34,7 @@
             </li>
           </ul>
         </nav>
-        <Personal v-if="tab === 'personal'" :is_editable="is_editable"></Personal>
+        <Personal v-if="tab === 'personal'"></Personal>
         <Portfolio v-if="tab === 'portfolio'"></Portfolio>
         <Experiences v-if="tab === 'experiences'"></Experiences>
         <Education v-if="tab === 'education'"></Education>
@@ -49,11 +49,9 @@ import Personal from "./TabComponents/Personal.vue";
 import Portfolio from "./TabComponents/Portfolio.vue";
 import Experiences from "./TabComponents/Experiences.vue";
 import Education from "./TabComponents/Education.vue";
-import { useRoute } from "vue-router";
+import axios from "axios";
 
-const route = useRoute();
 const tab = ref("personal");
-const is_editable = ref(Boolean(route.params.user));
 
 axios
   .get("/api/send_message")

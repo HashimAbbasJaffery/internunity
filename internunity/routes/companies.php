@@ -4,10 +4,15 @@
 use App\Http\Controllers\Company\ApplicationsController;
 use App\Http\Controllers\Company\InternshipController;
 use App\Http\Controllers\Company\UserController;
+use App\Http\Controllers\Company\UserHeartLikesController;
 use App\Http\Controllers\HiringController;
 use App\Http\Middleware\HasToken;
 use Illuminate\Support\Facades\Route;
+use Laravel\Sanctum\PersonalAccessToken;
 
+Route::get("/", function() {
+    return (PersonalAccessToken::findToken(request()->bearerToken()))->tokenable()->select(["id", "name", "email"])->first();
+});
 
 Route::get("internships", [InternshipController::class, "get"]);
 Route::get("internships/{internship}", [InternshipController::class, "get_by_id"]);
@@ -25,6 +30,8 @@ Route::put("/internship/{application}/reject", [HiringController::class, "reject
 Route::get("/applications/{internship}", [ApplicationsController::class, "get_by_internship"]);
 
 Route::get("/users", [UserController::class, "get"]);
+
+Route::post("/heart/{user}", [UserHeartLikesController::class, "heart"]);
 
 Route::post("login", [\App\Http\Controllers\Company\Auth\AuthenticationController::class, "login"])
     ->withoutMiddleware(HasToken::class);
