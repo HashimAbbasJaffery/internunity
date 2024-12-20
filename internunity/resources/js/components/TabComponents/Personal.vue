@@ -1,7 +1,7 @@
 <template>
   <section
     id="personal-info"
-    class="shade w-2/3 rounded-md p-3"
+    class="shade rounded-md p-3"
     :class="{ 'flex justify-center items-center': isFetching }"
   >
     <form
@@ -85,7 +85,7 @@
   </section>
 </template>
 <script setup>
-import { onMounted, reactive, ref, watch } from "vue";
+import { inject, onMounted, reactive, ref, watch } from "vue";
 import Loader from "../Utils/Loader.vue";
 import usePost from "../composables/post";
 
@@ -105,12 +105,13 @@ const getData = () => {
   return data;
 };
 
+const user_data = inject("user_data");
 const isFetching = ref(false);
 const user = reactive({
-  name: "",
-  email: "",
-  dob: "",
-  picture: "",
+  name: user_data.value?.name,
+  email: user_data.value?.email,
+  dob: user_data.value?.date_of_birth,
+  picture: user_data.value?.profile_pic,
 });
 const isFileUploading = ref(false);
 const url = ref(`/api/user/update`);
@@ -124,12 +125,12 @@ let config = {
 
 onMounted(async () => {
   isFetching.value = true;
-  const userData = await axios.get("/api/user", config);
-  console.log(userData);
-  user.name = userData.data.name;
-  user.email = userData.data.email;
-  user.dob = userData.data.date_of_birth;
-  user.picture = userData.data.profile_pic;
+  //   const userData = await axios.get("/api/user", config);
+  //   console.log(userData);
+  //   user.name = userData.data.name;
+  //   user.email = userData.data.email;
+  //   user.dob = userData.data.date_of_birth;
+  //   user.picture = userData.data.profile_pic;
   isFetching.value = false;
 });
 
@@ -149,4 +150,11 @@ const update = async (e) => {
   e.preventDefault();
   sendRequest(getData());
 };
+
+watch(user_data, function () {
+  user.name = user_data.value?.name;
+  user.email = user_data.value?.email;
+  user.dob = user_data.value?.date_of_birth;
+  user.picture = user_data.value?.profile_pic;
+});
 </script>

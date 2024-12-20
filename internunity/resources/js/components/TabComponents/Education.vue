@@ -8,7 +8,7 @@
   ></EducationModal>
   <section
     id="Experiences"
-    class="shade w-2/3 p-3 rounded-md space-y-4 divide-y-2"
+    class="shade p-3 rounded-md space-y-4 divide-y-2"
     :class="{ 'flex justify-center items-center': is_loading }"
   >
     <div class="experiences space-y-3 divide-y-2 relative" v-if="!is_loading">
@@ -33,6 +33,7 @@
         :next="next"
         :is_loading="is_loading_more"
         @next="url = next"
+        @click="next_page"
       ></LoadMoreButton>
       <Button
         class="rounded-full flex justify-center items-center absolute top-0 right-0"
@@ -46,7 +47,7 @@
 </template>
 <script setup>
 import useFetch from "../composables/fetch";
-import { ref } from "vue";
+import { inject, ref } from "vue";
 import moment from "moment";
 import Loader from "../Utils/Loader.vue";
 import Button from "../Utils/Button.vue";
@@ -59,10 +60,15 @@ import Heading from "../Utils/Heading.vue";
 const url = ref(`/api/user/educations`);
 const show_global_loading = ref(false);
 const is_adding = ref(false);
-const { internshipsData, is_loading, is_loading_more, next, fetch, per_page } = useFetch(
-  url,
-  show_global_loading
-);
+const {
+  internshipsData,
+  is_loading,
+  is_loading_more,
+  next,
+  fetch,
+  per_page,
+  next_page,
+} = inject("educations");
 const { isLoading, sendRequest, errors, returns } = usePost(`/api/user/education/create`);
 
 const add = (newEducation) => {

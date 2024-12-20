@@ -8,7 +8,7 @@
   ></experience-modal>
   <section
     id="Experiences"
-    class="shade w-2/3 p-3 rounded-md space-y-4 divide-y-2"
+    class="shade p-3 rounded-md space-y-4 divide-y-2"
     :class="{ 'flex justify-center items-center': is_loading }"
   >
     <div class="experiences space-y-3 divide-y-2 relative" v-if="!is_loading">
@@ -30,6 +30,7 @@
       <LoadMoreButton
         v-if="next"
         :next="next"
+        @click="next_page"
         :is_loading="is_loading_more"
         @next="url = next"
       ></LoadMoreButton>
@@ -45,7 +46,7 @@
 </template>
 <script setup>
 import useFetch from "../composables/fetch";
-import { ref, provide } from "vue";
+import { ref, provide, inject } from "vue";
 import moment from "moment";
 import Loader from "../Utils/Loader.vue";
 import Button from "../Utils/Button.vue";
@@ -56,13 +57,19 @@ import ResultNotFound from "../Utils/ResultNotFound.vue";
 import Heading from "../Utils/Heading.vue";
 
 const ExperienceUpdate = ExperienceModal;
+const experiences = inject("experiences");
 const url = ref(`/api/user/experiences`);
 const show_global_loading = ref(false);
 const is_adding = ref(false);
-const { internshipsData, is_loading, is_loading_more, next, fetch, per_page } = useFetch(
-  url,
-  show_global_loading
-);
+const {
+  internshipsData,
+  is_loading,
+  is_loading_more,
+  next,
+  fetch,
+  per_page,
+  next_page,
+} = inject("experiences");
 const { isLoading, sendRequest, errors, returns } = usePost(
   `/api/user/experience/create`
 );

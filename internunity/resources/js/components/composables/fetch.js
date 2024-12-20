@@ -46,12 +46,17 @@ export default function useFetch(url, show_global_loading) {
         fetchData();
     }
 
+    const next_page = () => {
+        url = next.value;
+        fetchData();
+    }
+
     watchEffect(() => {
         if(!on_load_fetched.value)
         fetchData();
         on_load_fetched.value = true;
     })
 
-    return { internshipsData, is_loading, is_loading_more, next, fetch, per_page };
+    return { internshipsData, is_loading, is_loading_more, next, fetch, per_page, next_page };
 
 }

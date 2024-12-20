@@ -30,7 +30,7 @@
 
   <section
     id="portfolio"
-    class="shade w-2/3 p-3 rounded-md"
+    class="shade p-3 rounded-md"
     :class="{ 'flex justify-center items-center': is_loading }"
   >
     <div class="content" v-if="!is_loading">
@@ -41,6 +41,7 @@
         <load-more-button
           v-if="next"
           :is_loading="is_loading_more"
+          @click="next_page"
           :next="next"
           @next="url = $event"
         ></load-more-button>
@@ -51,7 +52,7 @@
   </section>
 </template>
 <script setup>
-import { reactive, ref } from "vue";
+import { reactive, ref, inject } from "vue";
 import useFetch from "../composables/fetch";
 import Loader from "../Utils/Loader.vue";
 import usePost from "../composables/post";
@@ -67,10 +68,6 @@ const UpdateProject = CreateProject;
 const project = ref();
 const url = ref(`/api/user/projects`);
 const is_global_loading = ref(false);
-const { internshipsData, is_loading, is_loading_more, next, fetch, per_page } = useFetch(
-  url,
-  is_global_loading
-);
 const postUrl = ref(`/api/user/project/create`);
 let { isLoading, sendRequest, errors } = usePost(postUrl);
 const addModal = ref(false);
@@ -83,6 +80,15 @@ const newProject = reactive({
 });
 const showMenu = ref(false);
 const updateModal = ref(false);
+const {
+  internshipsData,
+  is_loading,
+  is_loading_more,
+  next,
+  fetch,
+  per_page,
+  next_page,
+} = inject("projects");
 
 const addProject = (newProject) => {
   postUrl.value = `/api/user/project/create`;
@@ -112,10 +118,10 @@ const clearAllFields = () => {
 
 const deleteProject = (id) => {
   postUrl.value = `/api/user/project/${id}/delete`;
-  sendRequest({ _method: "delete" });
-  project.value = [];
-
-  resetModalsAndRefetch();
+  sendRequest({ _method: "delete" }, function () {
+    resetModalsAndRefetch();
+    project.value = [];
+  });
 };
 
 const update = () => {
