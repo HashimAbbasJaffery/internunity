@@ -4,6 +4,7 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UserEditRequest;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Laravel\Sanctum\PersonalAccessToken;
@@ -12,6 +13,10 @@ use Storage;
 class UserController extends Controller
 {
     public function get(Request $request) {
+
+        if($request->user) {
+            return User::select(["id", "name", "email", "date_of_birth", "profile_pic"])->find($request->user);
+        }
 
         // Each Token represents the Logged in each device
         $token = $request->bearerToken();

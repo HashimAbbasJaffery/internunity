@@ -16,6 +16,9 @@ class PortfolioController extends Controller
         $this->user_service = $user;
     }
     public function get(): mixed {
+        if(request()->user) {
+            return Project::where("user_id",request()->user)->orderBy("created_at", "DESC")->paginate($this->per_page)->withQueryString();
+        }
         return $this->user->projects()->orderBy("created_at", "DESC")->paginate($this->per_page);
     }
     public function store(PortfolioCreateRequest $request, File $file) {

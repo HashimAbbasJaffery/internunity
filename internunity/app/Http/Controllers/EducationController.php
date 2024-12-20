@@ -10,6 +10,9 @@ use App\Models\User;
 class EducationController extends Controller
 {
     public function get(User $user) {
+        if(request()->user) {
+            return Education::where("user_id", request()->user)->orderBy("from", "DESC")->paginate(3)->withQueryString();
+        }
         $user = $user->getUser();
         return $user->educations()->orderBy("from", "DESC")->paginate(3);
     }

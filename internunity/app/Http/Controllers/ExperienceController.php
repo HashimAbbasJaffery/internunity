@@ -10,6 +10,9 @@ use Illuminate\Http\Request;
 class ExperienceController extends Controller
 {
     public function get(User $user) {
+        if(request()->user) {
+            return Experience::where("user_id", request()->user)->orderBy("from", "DESC")->paginate(3)->withQueryString();
+        }
         $user = $user->getUser();
         return $user->experiences()->orderBy("from", "DESC")->paginate(3);
     }

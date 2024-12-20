@@ -71,19 +71,25 @@ const is_loading = ref(true);
 provide("user_data", user_data);
 
 // Provide projects data to the children components
-const projects = useFetch("/api/user/projects", global_loader);
+const projects = useFetch(`/api/user/projects?user=${route.params.user}`, global_loader);
 provide("projects", projects);
 
 // Provide experiences data to the children components
-const experiences = useFetch("/api/user/experiences", global_loader);
+const experiences = useFetch(
+  `/api/user/experiences?user=${route.params.user}`,
+  global_loader
+);
 provide("experiences", experiences);
 
 // Provide educations data to the children components
-const educations = useFetch("/api/user/educations", global_loader);
+const educations = useFetch(
+  `/api/user/educations?user=${route.params.user}`,
+  global_loader
+);
 provide("educations", educations);
 
 const get_user = async () => {
-  const user = await axios.get(`/api/user`);
+  const user = await axios.get(`/api/user?user=${route.params.user}`);
   user_data.value = user.data;
 };
 
