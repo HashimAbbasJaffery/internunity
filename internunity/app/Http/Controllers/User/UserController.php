@@ -13,15 +13,16 @@ use Storage;
 class UserController extends Controller
 {
     public function get(Request $request) {
-
-        if($request->user) {
-            return User::select(["id", "name", "email", "date_of_birth", "profile_pic"])->find($request->user);
+     if($request->user) {
+            $user = User::with("skills:id,tag")->select(["id", "name", "email", "date_of_birth", "profile_pic"])->find($request->user);
+            abort_if(!$user, 404);
+            return $user;
         }
 
         // Each Token represents the Logged in each device
         $token = $request->bearerToken();
         $token = PersonalAccessToken::findToken($token);
-        return $token?->tokenable()?->with("chat_rooms")?->select(columns: ["id", "name", "email", "date_of_birth", "profile_pic", "has_notifications"])->first() ?? [];
+        return $token?->tokenable()?->with(["chat_rooms", "skills:id,tag"])?->select(columns: ["id", "name", "email", "date_of_birth", "profile_pic", "has_notifications"])->first() ?? [];
 
     }
     public function edit(UserEditRequest $request) {

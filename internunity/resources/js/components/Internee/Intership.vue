@@ -64,7 +64,13 @@
           <i class="fa-solid fa-flag"></i>
         </button>
       </div>
-      <div class="action-for-companies relative" v-if="viewFor === 'company'">
+      <div class="action-for-companies relative flex gap-2" v-if="viewFor === 'company'">
+        <button
+          @click="get_invitation_users"
+          class="bg-base-alt text-white px-2 py-1 rounded-md"
+        >
+          Invite candidates
+        </button>
         <bar
           :show_more_options="show_more_options"
           @toggle="show_more_options = !show_more_options"
@@ -124,6 +130,7 @@ import usePost from "../composables/post";
 import SubmitApplication from "../Modals/SubmitApplication.vue";
 import ReportModal from "../Modals/ReportModal.vue";
 import Bar from "../Utils/Bar.vue";
+import { useRouter } from "vue-router";
 
 const props = defineProps({
   internship: Object,
@@ -136,6 +143,7 @@ const props = defineProps({
     },
   },
 });
+const router = useRouter();
 const showMore = ref(false);
 const is_applied = ref(props.is_applied);
 const is_hearted = ref(props.internship.hearts?.length ?? false);
@@ -190,5 +198,17 @@ const deleteInternship = async (id) => {
   if (status.data) {
     is_deleted.value = true;
   }
+};
+
+const get_invitation_users = () => {
+  console.log(props.internship);
+  let token = "";
+  let i = 0;
+  props.internship.tags.forEach((internship) => {
+    if (i > 0) token += "|";
+    token += internship.id;
+    i++;
+  });
+  router.push(`/company/users?token=${token}&internship=${props.internship.id}`);
 };
 </script>

@@ -9,6 +9,8 @@
               : 'https://placehold.co/70x70'
           }`"
           width="60"
+          height="60"
+          style="width: 60px; height: 60px; object-fit: contain"
           class="rounded-full"
           alt=""
         />
@@ -37,11 +39,21 @@
       </p>
     </div>
     <div class="user-footer flex justify-between">
-      <button
-        class="bg-base-alt text-white px-3 py-1 rounded-md mt-3 hover:bg-base-alt/75"
-      >
-        See Profile
-      </button>
+      <div class="left-action-buttons flex gap-2">
+        <button
+          class="bg-base-alt text-white px-3 py-1 rounded-md mt-3 hover:bg-base-alt/75"
+          @click="$router.push(`/company/${user.id}/profile`)"
+        >
+          See Profile
+        </button>
+        <button
+          class="bg-base-alt text-white px-3 py-1 rounded-md mt-3 hover:bg-base-alt/75"
+          v-if="$route.query?.token ?? false"
+          @click="$router.push(`/company/${user.id}/profile`)"
+        >
+          Send Invitation
+        </button>
+      </div>
       <button class="px-3 py-1 rounded-md mt-3 text-black">
         <i class="fa-regular fa-heart" v-if="!is_hearted" @click="heartTo(user.id)"></i>
         <i

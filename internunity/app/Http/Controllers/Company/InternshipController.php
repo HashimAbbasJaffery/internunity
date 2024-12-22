@@ -16,7 +16,8 @@ class InternshipController extends Controller
     public function get(Request $request) {
         $keyword = $request->keyword;
         $company = (PersonalAccessToken::findToken($request->bearerToken()))->tokenable;
-        return $company->internships()->select(["id", "title", "description", "stipend", "status", "created_at"])
+        return $company->internships()
+                        ->select(["id", "title", "description", "stipend", "status", "created_at"])
                         ->with("tags")
                         ->latest()
                         ->whereStatus(1)
@@ -115,6 +116,6 @@ class InternshipController extends Controller
         return 1;
     }
     public function get_by_id(Internship $internship) {
-        return $internship->load(["tags"])->only(["id", "title", "description", "stipend", "status"]);
+        return $internship->load(["tags"])->only(["id", "title", "description", "stipend", "status", "tags"]);
     }
 }

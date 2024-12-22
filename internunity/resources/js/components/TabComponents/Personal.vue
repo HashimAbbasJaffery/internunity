@@ -68,6 +68,44 @@
           class="shade outline-none p-1 text-sm w-full rounded-md"
         />
       </label>
+      <label for="tags">
+        <p class="text-sm mb-1 font-bold">tags</p>
+        <input
+          type="text"
+          id="tags"
+          v-model="user.q"
+          class="mb-3 shade outline-none p-1 text-sm w-full rounded-md"
+          placeholder="PHP"
+          :class="{ 'border border-red-500': errors?.tags ?? false }"
+        />
+        <div class="drawer bg-white absolute shade w-1/2 rounded">
+          <div v-if="is_fetching_skills" class="loader-container flex justify-center p-2">
+            <loader class="loader loader-short"></loader>
+          </div>
+          <ul v-lse>
+            <li
+              class="hover:bg-slate-200 p-1 text-sm cursor-pointer"
+              @click="addSkill(skill)"
+              v-for="skill in AvailableSkills"
+              :key="skill.id"
+            >
+              {{ skill.tag }}
+            </li>
+          </ul>
+        </div>
+      </label>
+      <div
+        class="added-skills flex gap-2 flex-wrap"
+        v-if="UserSkillsList?.length ?? false"
+      >
+        <span
+          v-for="skill in UserSkillsList"
+          :key="skill.id"
+          class="added-skill bg-base-alt text-xs text-white px-2 py-1 mb-3 rounded-full"
+          >{{ skill.tag }}
+          <i class="ml-1 fa-solid fa-x cursor-pointer" @click="removeSkill(skill)"></i
+        ></span>
+      </div>
       <button
         type="submit"
         :disabled="isLoading"
@@ -85,8 +123,9 @@
   </section>
 </template>
 <script setup>
-import { inject, onMounted, reactive, ref, watch } from "vue";
+import { inject, onMounted, reactive, ref, watch, watchEffect } from "vue";
 import Loader from "../Utils/Loader.vue";
+import { debounce } from "lodash";
 import usePost from "../composables/post";
 
 const props = defineProps({
@@ -112,27 +151,14 @@ const user = reactive({
   email: user_data.value?.email,
   dob: user_data.value?.date_of_birth,
   picture: user_data.value?.profile_pic,
+  q: "",
 });
 const isFileUploading = ref(false);
 const url = ref(`/api/user/update`);
 const { isLoading, sendRequest, errors } = usePost(url);
-
-let config = {
-  headers: {
-    Authorization: "Bearer " + localStorage.token,
-  },
-};
-
-onMounted(async () => {
-  isFetching.value = true;
-  //   const userData = await axios.get("/api/user", config);
-  //   console.log(userData);
-  //   user.name = userData.data.name;
-  //   user.email = userData.data.email;
-  //   user.dob = userData.data.date_of_birth;
-  //   user.picture = userData.data.profile_pic;
-  isFetching.value = false;
-});
+const UserSkillsList = ref(user_data.value?.skills);
+const AvailableSkills = ref([]);
+const is_fetching_skills = ref(false);
 
 const showImage = () => {
   const reader = new FileReader();
@@ -156,5 +182,45 @@ watch(user_data, function () {
   user.email = user_data.value?.email;
   user.dob = user_data.value?.date_of_birth;
   user.picture = user_data.value?.profile_pic;
+});
+
+watch(
+  () => user.q,
+  debounce(async () => {
+    if (!user.q) {
+      AvailableSkills.value = [];
+      return;
+    }
+    is_fetching_skills.value = true;
+    const status = await axios.get(`/api/skills?q=${user.q}`);
+    AvailableSkills.value = [...status.data];
+    is_fetching_skills.value = false;
+  }, 500)
+);
+
+const addSkill = async (skill) => {
+  if (UserSkillsList.value.find((user_skill) => user_skill.id === skill.id)) {
+    user.q = "";
+    return;
+  }
+  const status = await axios.post(`/api/skills/manipulate/add`, { skill });
+  console.log(status);
+  if (status.data) {
+    UserSkillsList.value.push(skill);
+    user.q = "";
+  }
+};
+
+const removeSkill = async (skill) => {
+  const status = await axios.post(`/api/skills/manipulate/remove`, { skill });
+  if (status.data) {
+    UserSkillsList.value = UserSkillsList.value.filter(
+      (user_skill) => user_skill.id !== skill.id
+    );
+  }
+};
+
+onMounted(async () => {
+  console.log(user_data.value);
 });
 </script>

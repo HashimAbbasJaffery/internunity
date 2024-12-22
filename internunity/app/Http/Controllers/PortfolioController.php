@@ -17,7 +17,9 @@ class PortfolioController extends Controller
     }
     public function get(): mixed {
         if(request()->user) {
-            return Project::where("user_id",request()->user)->orderBy("created_at", "DESC")->paginate($this->per_page)->withQueryString();
+            $project = Project::where("user_id",request()->user)->orderBy("created_at", "DESC")->paginate($this->per_page)->withQueryString();
+            abort_if(!$project, 404);
+            return $project;
         }
         return $this->user->projects()->orderBy("created_at", "DESC")->paginate($this->per_page);
     }

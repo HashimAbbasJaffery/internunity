@@ -1,7 +1,6 @@
 <template>
-  <Layout>
+  <ProfileLayout>
     <main>
-      <p>{{ is_loading }}</p>
       <section class="profile container mx-auto w-2/3 flex mt-4 gap-2 items-start">
         <nav class="options bg-base-alt text-white w-1/3 p-2 rounded-md">
           <ul class="space-y-3">
@@ -46,7 +45,7 @@
         </div>
       </section>
     </main>
-  </Layout>
+  </ProfileLayout>
 </template>
 <script setup>
 import Layout from "./Shared/Layout.vue";
@@ -55,14 +54,17 @@ import Personal from "./TabComponents/Personal.vue";
 import Portfolio from "./TabComponents/Portfolio.vue";
 import Experiences from "./TabComponents/Experiences.vue";
 import Education from "./TabComponents/Education.vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import useFetch from "./composables/fetch";
 import axios from "axios";
 import Loader from "./Utils/Loader.vue";
+import CompanyLayout from "./Shared/CompanyLayout.vue";
 
 const route = useRoute();
+const router = useRouter();
 const tab = ref("personal");
-const is_editable = ref(Boolean(route.params.user));
+const is_not_editable = ref(Boolean(route.params.user));
+const ProfileLayout = is_not_editable.value ? CompanyLayout : Layout;
 const user_data = ref(null);
 const global_loader = ref(false);
 const is_loading = ref(true);
@@ -89,14 +91,22 @@ const educations = useFetch(
 provide("educations", educations);
 
 const get_user = async () => {
-  const user = await axios.get(`/api/user?user=${route.params.user}`);
-  user_data.value = user.data;
+  try {
+    const user = await axios.get(`/api/user?user=${route.params?.user ?? ""}`);
+    console.log(user);
+    user_data.value = user.data;
+  } catch (e) {
+    console.log(e);
+  }
 };
+
+const is404 = () => {};
 
 onMounted(async () => {
   await get_user();
   if (projects.is_loading && experiences.is_loading && educations.is_loading) {
     is_loading.value = false;
+    is404();
   }
 });
 

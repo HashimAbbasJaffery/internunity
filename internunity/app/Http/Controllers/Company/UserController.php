@@ -12,15 +12,19 @@ use Laravel\Sanctum\PersonalAccessToken;
 
 class UserController extends Controller
 {
-    public function get() {
-        $keyword = request()->q;
-
+    public function get(Request $request) {
+        $keyword = $request->q;
+        $skill_ids = $request->token ? explode("|", $request->token) : '';
         $company = (PersonalAccessToken::findToken(request()->bearerToken()))->tokenable;
         $users = User::with(["skills:tag,id", "heartedByCompany" => fn($query) => $query->where("heartable_id", $company->id)])
                         ->withCount(relations: "heartedByCompany")
                         ->whereLike("tagline", "%$keyword%")
                         ->orWhereLike("name", "%$keyword%")
-                        ->orwhereHas("skills", fn(Builder $query) => $query->whereLike("tag", "%$keyword%"))
+                        ->when($skill_ids, function($query) use($skill_ids) {
+                            $query->whereHas("skills", fn($query) => $query->whereIn("tag_id", $skill_ids));
+                        }, function($query) use ($keyword) {
+                            $query->orWhereHas("skills", fn(Builder $query) => $query->whereLike("tag", "%$keyword%"));
+                        })
                         ->orderBy("hearted_by_company_count", "desc")
                         ->paginate(8)
                         ->withQueryString();

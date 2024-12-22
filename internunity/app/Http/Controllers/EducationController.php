@@ -11,7 +11,9 @@ class EducationController extends Controller
 {
     public function get(User $user) {
         if(request()->user) {
-            return Education::where("user_id", request()->user)->orderBy("from", "DESC")->paginate(3)->withQueryString();
+            $educations = Education::where("user_id", request()->user)->orderBy("from", "DESC")->paginate(3)->withQueryString();
+            abort_if(!$educations, 404);
+            return $educations;
         }
         $user = $user->getUser();
         return $user->educations()->orderBy("from", "DESC")->paginate(3);

@@ -79,7 +79,10 @@
           </div>
         </label>
 
-        <div class="added-skills flex gap-2 flex-wrap" v-if="added_skills.length">
+        <div
+          class="added-skills flex gap-2 flex-wrap"
+          v-if="added_skills?.length ?? false"
+        >
           <span
             v-for="skill in added_skills"
             :key="skill.id"
@@ -128,11 +131,12 @@ const form = reactive({
 
 const get_internship = async () => {
   const status = await axios.get(`/api/company/internships/${route.params.internship}`);
-  console.log(status.data);
 
   form.title = status.data.title;
   form.stipend = status.data.stipend.replaceAll(",", "");
   form.description = status.data.description;
+  console.log("lol");
+  console.log(status.data);
   added_skills.value = status.data.tags;
   console.log(status.data.tags);
 };
@@ -162,7 +166,7 @@ const IsApiHealthy = async () => {
 };
 
 onMounted(async () => {
-  get_internship();
+  await get_internship();
   const IsHealthy = await IsApiHealthy();
   if (!localStorage.access_token || !IsHealthy) getAccessToken();
 });

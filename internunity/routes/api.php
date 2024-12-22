@@ -25,9 +25,12 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Number;
 
 Route::post("/skills/add", [SkillsController::class, "store"]);
+Route::get("/skills", [SkillsController::class, "get"]);
+Route::get("/skills/{user}", [SkillsController::class, "get_user_skills"]);
+Route::post("/skills/manipulate/{type}", [SkillsController::class, "add"])
+        ->whereIn("type", ["add", "remove"]);
 
 Route::get("/send_message", [ChatController::class, "get"])->middleware("auth:api");
-// Route::post("/notification/{user}", [NotificationController::class, "notify"]);
 Route::post("/send", [ChatController::class, "store"]);
 Route::put("/notifications/user", [MarkAsReadController::class, "edit"]);
 
@@ -67,6 +70,7 @@ Route::get("/report_types", [ReportTypeController::class, "get"]);
 Route::post("login", [AuthenticationController::class, "login"])->name("login")
         ->withoutMiddleware(HasToken::class);
 Route::delete("logout", [AuthenticationController::class, "logout"])->name("logout");
+
 
 
 Route::get("/internships", [InternshipController::class, "index"])

@@ -30,10 +30,16 @@ import InputMarkup from "../../components/Utils/InputMarkup.vue";
 import { debounce } from "lodash";
 import User from "../../components/User.vue";
 import Loader from "../../components/Utils/Loader.vue";
+import { useRoute } from "vue-router";
 
 const keyword = ref("");
 const show_global_loading = ref(false);
-const url = ref(`/api/company/users`);
+const route = useRoute();
+const url = ref(
+  `/api/company/users?q=${keyword.value}&token=${route.query?.token ?? ""}&internship=${
+    route.query?.internship ?? ""
+  }`
+);
 const {
   internshipsData: users,
   is_loading,
