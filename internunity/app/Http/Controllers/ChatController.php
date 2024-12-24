@@ -55,6 +55,10 @@ class ChatController extends Controller
 
         // Send Realtime notification
         $receiver->notify(new UserNotification(request()->message, request()->type, $extras));
+
+        return response()->json([
+            "message" => "Message sent successfully"
+        ], 200);
     }
     public function changeStatus(int $room) {
         $room = ChatRoom::find($room);

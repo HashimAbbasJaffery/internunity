@@ -21,7 +21,7 @@ class UserController extends Controller
                         ->whereLike("tagline", "%$keyword%")
                         ->orWhereLike("name", "%$keyword%")
                         ->when($skill_ids, function($query) use($skill_ids) {
-                            $query->whereHas("skills", fn($query) => $query->whereIn("tag_id", $skill_ids));
+                            $query->with("invitations:id")->whereHas("skills", fn($query) => $query->whereIn("tag_id", $skill_ids));
                         }, function($query) use ($keyword) {
                             $query->orWhereHas("skills", fn(Builder $query) => $query->whereLike("tag", "%$keyword%"));
                         })
@@ -29,5 +29,12 @@ class UserController extends Controller
                         ->paginate(8)
                         ->withQueryString();
         return $users;
+    }
+    public function get_by_id(User $user) {
+        return $user->select(["id", "name", "profile_pic"])->find($user->id);
+    }
+    public function get_chatrooms(Request $request) {
+        $company = (PersonalAccessToken::findToken(request()->bearerToken()))->tokenable;
+        return $company->chatrooms()->with(["user:id,name,profile_pic"])->get();
     }
 }

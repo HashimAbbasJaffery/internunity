@@ -2,6 +2,8 @@
 
 namespace App\Mail;
 
+use App\Models\Company;
+use App\Models\Internship;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -16,7 +18,7 @@ class ApplicationInvitation extends Mailable
     /**
      * Create a new message instance.
      */
-    public function __construct()
+    public function __construct( public Internship $internship, public Company $company, public string $recipient_name )
     {
         //
     }
@@ -37,7 +39,7 @@ class ApplicationInvitation extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'view.name',
+            view: 'mails.invite',
         );
     }
 

@@ -6,6 +6,7 @@ use App\Http\Controllers\Company\InternshipController;
 use App\Http\Controllers\Company\UserController;
 use App\Http\Controllers\Company\UserHeartLikesController;
 use App\Http\Controllers\HiringController;
+use App\Http\Controllers\User\InvitationController;
 use App\Http\Middleware\HasToken;
 use Illuminate\Support\Facades\Route;
 use Laravel\Sanctum\PersonalAccessToken;
@@ -20,6 +21,7 @@ Route::get("internship/{internship}/applications", [ApplicationsController::clas
 Route::delete("internship/{internship}/delete", [InternshipController::class, "delete"]);
 Route::post("internship/create", [InternshipController::class, "store"]);
 Route::put("internship/{internship}/update", [InternshipController::class, "update"]);
+Route::post("/internship/{internship}/invite", [InvitationController::class, "invite"]);
 
 // Internship Actions
 Route::put("/internship/{application}/hire", [HiringController::class, "hire"]);
@@ -30,6 +32,8 @@ Route::put("/internship/{application}/reject", [HiringController::class, "reject
 Route::get("/applications/{internship}", [ApplicationsController::class, "get_by_internship"]);
 
 Route::get("/users", [UserController::class, "get"]);
+Route::get("/user/{user}", [UserController::class, "get_by_id"]);
+Route::get("chatrooms", [UserController::class, "get_chatrooms"]);
 
 Route::post("/heart/{user}", [UserHeartLikesController::class, "heart"]);
 

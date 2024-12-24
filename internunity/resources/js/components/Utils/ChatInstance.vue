@@ -13,6 +13,7 @@
     </div>
     <div
       v-if="is_opened"
+      id="chats"
       class="chat-contents mt-4 space-y-2 h-4/6 hidden-scrollbar"
       style="overflow: auto; height: 250px"
     >
@@ -50,11 +51,19 @@
   </div>
 </template>
 <script setup>
-import { ref, toRef } from "vue";
+import { onUpdated, ref, toRef, onMounted } from "vue";
 
 const is_opened = ref(true);
 
 const props = defineProps({
   chat: Object,
+});
+
+onMounted(() => {
+  chats.scrollTop = chats.scrollHeight;
+});
+
+onUpdated(() => {
+  chats.scrollTop = chats.scrollHeight;
 });
 </script>

@@ -13,6 +13,7 @@ import InternshipUpdate from "../Company/Internship/update.vue";
 import ApplicationsList from "../Company/Internship/Applications/Index.vue";
 import Users from "../Company/Users/Index.vue";
 import NotFound from "../components/Errors/NotFound.vue";
+import Messages from "../Company/Chats/Index.vue";
 
 const routes = [
     {
@@ -95,6 +96,11 @@ const routes = [
         path: '/company/:user/profile',
         component: Profile,
         name: 'company.profile'
+    },
+    {
+        path: '/company/messages',
+        component: Messages,
+        name: 'company.messages'
     },
     {
         path: '/:notFound',

@@ -9,7 +9,11 @@
         class="container mx-auto mt-9 w-2/3"
         :class="{ 'divide-y-2': !is_loading }"
       >
-        <Internships @reported="reported" :is_loading="is_loading"></Internships>
+        <Internships
+          :url="`/api/internships?internship_id=${$route.query?.internship_id ?? ''}`"
+          @reported="reported"
+          :is_loading="is_loading"
+        ></Internships>
         <div
           v-if="is_loading"
           class="relative internship bg-white mt-3 rounded-md p-2 hover:bg-grey cursor-pointer"
@@ -22,7 +26,7 @@
 </template>
 
 <script setup>
-import { provide, ref } from "vue";
+import { provide, ref, onMounted } from "vue";
 import Internships from "./Internee/Internships.vue";
 import InputMarkup from "./Utils/InputMarkup.vue";
 import Layout from "./Shared/Layout.vue";

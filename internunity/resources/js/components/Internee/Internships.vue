@@ -35,12 +35,15 @@
 </template>
 
 <script setup>
-import { inject, provide, ref, watch } from "vue";
+import { inject, onMounted, provide, ref, watch } from "vue";
 import Intership from "./Intership.vue";
 import useFetch from "../composables/fetch";
 import LoadMore from "../Utils/LoadMore.vue";
 import { debounce } from "lodash";
 import LoadingSkeleton from "../Utils/LoadingSkeleton.vue";
+import { useRoute } from "vue-router";
+
+const route = useRoute();
 
 const props = defineProps({
   is_loading: Boolean,
@@ -55,7 +58,7 @@ const props = defineProps({
   url: {
     type: String,
     default() {
-      return "/api/internships";
+      return `/api/internships`;
     },
   },
   viewFor: {

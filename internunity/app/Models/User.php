@@ -106,5 +106,8 @@ class User extends Authenticatable
     public function heartedByCompany() {
         return $this->morphedByMany(Company::class, 'heartable', 'user_hearts');
     }
+    public function invitations() {
+        return $this->belongsToMany(Internship::class, "invitations");
+    }
 
 }

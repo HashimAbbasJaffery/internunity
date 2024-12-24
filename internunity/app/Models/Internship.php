@@ -53,4 +53,7 @@ class Internship extends Model
     public function hires() {
         return $this->hasMany(Hire::class);
     }
+    public function invitations() {
+        return $this->belongsToMany(User::class, "invitations");
+    }
 }

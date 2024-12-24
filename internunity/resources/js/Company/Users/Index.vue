@@ -4,6 +4,13 @@
       <section id="search" class="flex justify-between">
         <InputMarkup v-model="keyword" @search="keyword = $event"></InputMarkup>
       </section>
+      <button
+        class="reset bg-base-alt text-white px-2 py-1 rounded-md mt-4 hover:bg-base-alt/75"
+        @click="reset"
+        v-if="Object.keys($route.query).length"
+      >
+        Reset Filters
+      </button>
       <div class="users divide-y-4">
         <div class="user w-full mt-5" v-for="user in users" :key="user.id">
           <user :user="user"></user>
@@ -30,11 +37,12 @@ import InputMarkup from "../../components/Utils/InputMarkup.vue";
 import { debounce } from "lodash";
 import User from "../../components/User.vue";
 import Loader from "../../components/Utils/Loader.vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 
 const keyword = ref("");
 const show_global_loading = ref(false);
 const route = useRoute();
+const router = useRouter();
 const url = ref(
   `/api/company/users?q=${keyword.value}&token=${route.query?.token ?? ""}&internship=${
     route.query?.internship ?? ""
@@ -53,7 +61,16 @@ provide("company", company);
 
 const search = () => {
   users.value = [];
-  url.value = `/api/company/users?q=${keyword.value}`;
+  url.value = `/api/company/users?q=${keyword.value}&token=${
+    route.query?.token ?? ""
+  }&internship=${route.query?.internship ?? ""}`;
+  fetch();
+};
+
+const reset = () => {
+  router.push({ query: {} });
+  users.value = [];
+  url.value = "/api/company/users";
   fetch();
 };
 

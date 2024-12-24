@@ -26,4 +26,7 @@ class Company extends Model
     public function profileHearts() {
         return $this->morphToMany(User::class, 'heartable', 'user_hearts');
     }
+    public function chatrooms() {
+        return $this->hasMany(Chatroom::class);
+    }
 }

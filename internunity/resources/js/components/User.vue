@@ -48,8 +48,20 @@
         </button>
         <button
           class="bg-base-alt text-white px-3 py-1 rounded-md mt-3 hover:bg-base-alt/75"
+          @click="$router.push(`/company/messages?user_id=${user.id}`)"
+        >
+          Send message
+        </button>
+        <button
+          class="bg-base-alt text-white px-3 py-1 rounded-md mt-3 hover:bg-base-alt/75 disabled:bg-base-alt/75 disabled:cursor-not-allowed"
           v-if="$route.query?.token ?? false"
-          @click="$router.push(`/company/${user.id}/profile`)"
+          :disabled="
+            user.invitations.filter(
+              (invitation) =>
+                parseInt(invitation.id) === parseInt($route.query.internship)
+            ).length
+          "
+          @click="invite"
         >
           Send Invitation
         </button>
@@ -66,8 +78,9 @@
   </div>
 </template>
 <script setup>
-import { inject, onMounted, ref, watch } from "vue";
+import { inject, onMounted, ref, useSSRContext, watch } from "vue";
 import Loader from "./Utils/Loader.vue";
+import { useRoute, useRouter } from "vue-router";
 
 const props = defineProps({
   user: Object,
@@ -75,6 +88,8 @@ const props = defineProps({
 });
 const company = inject("company");
 const is_hearted = ref(props.user.hearted_by_company.length > 0);
+const route = useRoute();
+const router = useRouter();
 
 watch(company, function () {
   is_hearted.value =
@@ -86,5 +101,15 @@ watch(company, function () {
 const heartTo = async (user_id) => {
   is_hearted.value = !is_hearted.value;
   await axios.post(`/api/company/heart/${user_id}`);
+};
+
+const invite = async (e) => {
+  e.preventDefault();
+
+  const status = await axios.post(
+    `/api/company/internship/${route.query?.internship ?? ""}/invite`,
+    { email: props.user?.email ?? "", name: props.user?.name ?? "" }
+  );
+  console.log(status);
 };
 </script>
